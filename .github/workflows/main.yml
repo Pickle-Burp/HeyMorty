@@ -10,7 +10,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt-get update -y -qq
-          sudo apt install libcurl-dev cmake
+          sudo apt install libcurl4-openssl-dev cmake
       - name: Make the projet
         run: |
           cmake .
