@@ -9,6 +9,6 @@ if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow -Wdouble-promotion -Wformat=2 -Wformat-truncation -Wformat-overflow -Wundef -fno-common -Wconversion")
 endif ()
 
-add_executable(HeyMorty src/main.c)
+add_executable(HeyMorty src/main.c src/sprec/web_client.c src/sprec/web_client.h)
 
 target_link_libraries(HeyMorty curl)
