@@ -68,6 +68,8 @@ int sprec_wav_header_write(FILE *fd, sprec_wav_header *hdr);
  * interpreted as an AudioQueue error code.
  * On other Unices, the return code is an ALSA (libasound) status code.
  */
-int sprec_record_wav(const char *filename, sprec_wav_header *hdr, uint32_t duration_ms);
+int sprec_record_wav(const char *filename,
+                     sprec_wav_header *hdr,
+                     uint32_t duration_ms);
 
 #endif //HEYMORTY_SRC_SPREC_WAV_H_
