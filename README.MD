@@ -1,4 +1,5 @@
 # HeyMorty !
 
 ## Libraries :
-- libcurl
+- libcurl4-openssl-dev
+- libflac-dev
