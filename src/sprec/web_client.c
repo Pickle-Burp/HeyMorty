@@ -34,7 +34,7 @@ sprec_send_audio_data(
   if (!curl)
     errx(EXIT_FAILURE, "Failed to initialize curl");
 
-  struct curl_list *headers = NULL;
+  struct curl_slist *headers = NULL;
   curl_slist_append(headers, "Expect:");
   headers = curl_slist_append(headers, sb_format(CONTENT_TYPE, sampleRate));
   curl_easy_setopt(curl, CURLOPT_URL, sb_format(URL, apikey, lang));
