@@ -69,6 +69,26 @@ unsigned long sb_appendf(StringBuilder *sb, const char *format, ...) {
 }
 
 /*
+ * sb_appendf adds a copy of the given formatted string to a StringBuilder
+ * with a custom max length
+ */
+unsigned long sb_appendf_l(StringBuilder *sb, const char *format,
+                           unsigned long length, ...) {
+  int rc;
+  char buf[length];
+  va_list args;
+
+  va_start (args, length);
+  rc = vsnprintf(&buf[0], length, format, args);
+  va_end(args);
+
+  if (0 > rc)
+    return SB_FAILURE;
+
+  return sb_append(sb, buf);
+}
+
+/*
  * sb_concat returns a concatenation of strings that have been appended to the
  * StringBuilder. It is the callers responsibility to free the returned
  * reference.
