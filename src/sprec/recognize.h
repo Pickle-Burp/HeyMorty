@@ -5,36 +5,13 @@
 #ifndef HEYMORTY_SRC_SPREC_RECOGNIZE_H_
 #define HEYMORTY_SRC_SPREC_RECOGNIZE_H_
 
-#include <pthread.h>
-
-typedef void (*sprec_callback)(const char *, void *);
-
 /*
- * Performs a synchronous text recognition session in the given language,
- * listening for the duration specified by `dur_s' (in seconds),
- * then returns the recognized text and the recognition confidence.
- * The return value must be freed using sprec_result_free().
+ * Performs a text recognition on the content of filename
+ * then returns the recognized text.
+ *
  * Returns NULL on error.
  */
-char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s);
-
-char *sprec_recognize_file(const char *apikey, const char *lang,
-                           const char *filename, struct sprec_wav_header *hdr);
-
-/*
- * Performs an asynchronous text recognition session in the given language,
- * listening for the duration specified by `dur_s' (in seconds).
- * Returns immediately. When the recognition finishes or an eror occurs,
- * it calls the `cb' callback function with a valid sprec_result structure
- * and the `userdata' specified here. The callback function *must not*
- * sprec_result_free() its first parameter!
- */
-pthread_t sprec_recognize_async(
-    const char *apikey,
-    const char *lang,
-    double dur_s,
-    sprec_callback cb,
-    void *userdata
-);
+char *sprec_recognize_base64(const char *apikey, const char *lang,
+                             const char *filename, uint32_t sample_rate);
 
 #endif //HEYMORTY_SRC_SPREC_RECOGNIZE_H_

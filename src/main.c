@@ -32,7 +32,7 @@ int copy_file(char *source_file, char *target_file) {
 
 int main() {
   /*if (copy_file(FILE_NAME, FILE_COPY) != 0)
-    errx(EXIT_FAILURE, "Failed to copy file");
+    errx(EXIT_FAILURE, "Failed to copy utils");
 
   printf("File copied successfully\n");*/
 
