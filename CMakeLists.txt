@@ -33,6 +33,6 @@ target_link_libraries(HeyMorty FLAC)
 target_link_libraries(HeyMorty asound)
 target_link_libraries(HeyMorty Threads::Threads)
 
-add_executable(HeyMortyxor src/xor.c)
+add_executable(HeyMortyxor src/xor.c src/neuron.c src/neuron.h src/layer.h src/layer.c src/backpropagation.h)
 
 target_link_libraries(HeyMortyxor m)
