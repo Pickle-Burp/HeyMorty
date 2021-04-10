@@ -22,10 +22,8 @@ void *sprec_pthread_fn(void *ctx);
 
 char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s) {
   struct sprec_wav_header *hdr;
-  sprec_server_response *resp;
   int err;
-  size_t len;
-  char *text, *tmpstub, *buf;
+  char *tmpstub;
   char wavfile[L_tmpnam + 5];
 
   tmpstub = tmpnam(NULL);
@@ -45,7 +43,17 @@ char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s) {
     return NULL;
   }
 
+  return sprec_recognize_file(apikey, lang, wavfile, hdr);
+}
 
+char *sprec_recognize_file(const char *apikey,
+                           const char *lang,
+                           const char *wavfile,
+                           struct sprec_wav_header *hdr) {
+  sprec_server_response *resp;
+  size_t len;
+  char *text, *buf;
+  printf("Encoding file to flac\n");
   /*
    * Convert the WAV file to FLAC data...
    */
@@ -55,6 +63,7 @@ char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s) {
     return NULL;
   }
 
+  printf("Sending data to Google API\n");
   /*
    * ...and send it to Google
    */
@@ -62,9 +71,8 @@ char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s) {
   free(buf);
   free(hdr);
 
-  if (resp == NULL) {
+  if (resp == NULL)
     return NULL;
-  }
 
   /*
    * Get the JSON from the response object,
@@ -81,6 +89,7 @@ char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s) {
 
   return text;
 }
+
 
 pthread_t sprec_recognize_async(
     const char *apikey,

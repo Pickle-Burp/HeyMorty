@@ -32,7 +32,7 @@ sprec_send_audio_data(
   snprintf(
       url,
       sizeof url,
-      "https://www.google.com/speech-api/v2/recognize?output=json&key=%s&lang=%s",
+      "https://speech.googleapis.com/v1/speech:recognize",
       apikey,
       language ? language : "en-US"
   );

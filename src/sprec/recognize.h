@@ -18,6 +18,9 @@ typedef void (*sprec_callback)(const char *, void *);
  */
 char *sprec_recognize_sync(const char *apikey, const char *lang, double dur_s);
 
+char *sprec_recognize_file(const char *apikey, const char *lang,
+                           const char *filename, struct sprec_wav_header *hdr);
+
 /*
  * Performs an asynchronous text recognition session in the given language,
  * listening for the duration specified by `dur_s' (in seconds).
