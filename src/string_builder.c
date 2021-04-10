@@ -1,8 +1,3 @@
-//
-// Created by Vinetos on 10/04/2021.
-//
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -21,29 +16,28 @@ StringBuilder *sb_create() {
 /*
  * sb_empty returns non-zero if the given StringBuilder is empty.
  */
-int sb_empty(StringBuilder *sb) {
+unsigned long sb_empty(StringBuilder *sb) {
   return (sb->root == NULL);
 }
 
 /*
  * sb_append adds a copy of the given string to a StringBuilder.
  */
-int sb_append(StringBuilder *sb, const char *str) {
-  int length;
+unsigned long sb_append(StringBuilder *sb, const char *str) {
+  unsigned long length;
   StringFragment *frag = NULL;
 
   if (NULL == str || '\0' == *str)
     return sb->length;
 
   length = strlen(str);
-  frag = (StringFragment *) malloc(
-      sizeof(StringFragment) + (sizeof(char) * length));
+  frag = malloc(sizeof(StringFragment) + (sizeof(char) * length));
   if (NULL == frag)
     return SB_FAILURE;
 
   frag->next = NULL;
   frag->length = length;
-  memcpy((void *) &frag->str, (const void *) str, sizeof(char) * (length + 1));
+  memcpy(&frag->str, str, sizeof(char) * (length + 1));
 
   sb->length += length;
   if (NULL == sb->root)
@@ -59,7 +53,7 @@ int sb_append(StringBuilder *sb, const char *str) {
 /*
  * sb_appendf adds a copy of the given formatted string to a StringBuilder.
  */
-int sb_appendf(StringBuilder *sb, const char *format, ...) {
+unsigned long sb_appendf(StringBuilder *sb, const char *format, ...) {
   int rc;
   char buf[SB_MAX_FRAG_LENGTH];
   va_list args;
