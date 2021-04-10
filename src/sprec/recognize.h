@@ -12,6 +12,6 @@
  * Returns NULL on error.
  */
 char *sprec_recognize_base64(const char *apikey, const char *lang,
-                             const char *filename, uint32_t sample_rate);
+                             const char *filename, unsigned int sample_rate);
 
 #endif //HEYMORTY_SRC_SPREC_RECOGNIZE_H_
