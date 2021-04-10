@@ -13,17 +13,22 @@
 
 typedef struct neuron_t
 {
-    float actv;
-    float *out_weights;
-    float bias;
-    float z;
+    double actv;
+    double *out_weights;
+    double bias;
+    double z;
 
-    float dactv;
-    float *dw;
-    float dbias;
-    float dz;
+    double dactv;
+    double *dw;
+    double dbias;
+    double dz;
 } neuron;
 
+/**
+ *
+ * @param num_out_weights
+ * @return a neuron
+ */
 neuron create_neuron(int num_out_weights);
 
 #endif //HEYMORTY_NEURON_H

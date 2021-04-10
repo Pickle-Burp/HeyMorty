@@ -4,15 +4,16 @@
 layer *lay = NULL;
 int num_layers;
 int *num_neurons;
-float alpha;
-float *cost;
-float full_cost;
-float **input;
-float **desired_outputs;
+double alpha;
+double *cost;
+double full_cost;
+double **input;
+double **desired_outputs;
 int num_training_ex;
 int n = 1;
 
 int main(void) {
+    //Get number of layers
     printf("Enter the number of Layers in Neural Network:\n");
     scanf("%d", &num_layers);
 
@@ -34,26 +35,26 @@ int main(void) {
     }
 
     printf("Enter the learning rate (Usually 0.15): \n");
-    scanf("%f", &alpha);
+    scanf("%lf", &alpha);
     printf("\n");
 
     printf("Enter the number of training examples: \n");
     scanf("%d", &num_training_ex);
     printf("\n");
 
-    input = (float **) malloc(num_training_ex * sizeof(float *));
+    input = (double **) malloc(num_training_ex * sizeof(double *));
     for (int i = 0; i < num_training_ex; i++) {
-        input[i] = (float *) malloc(num_neurons[0] * sizeof(float));
+        input[i] = (double *) malloc(num_neurons[0] * sizeof(double));
     }
 
-    desired_outputs = (float **) malloc(num_training_ex * sizeof(float *));
+    desired_outputs = (double **) malloc(num_training_ex * sizeof(double *));
     for (int i = 0; i < num_training_ex; i++) {
-        desired_outputs[i] = (float *) malloc(
-                num_neurons[num_layers - 1] * sizeof(float));
+        desired_outputs[i] = (double *) malloc(
+                num_neurons[num_layers - 1] * sizeof(double));
     }
 
-    cost = (float *) malloc(num_neurons[num_layers - 1] * sizeof(float));
-    memset(cost, 0, num_neurons[num_layers - 1] * sizeof(float));
+    cost = (double *) malloc(num_neurons[num_layers - 1] * sizeof(double));
+    memset(cost, 0, num_neurons[num_layers - 1] * sizeof(double));
 
     // Get Training Examples
     get_inputs();
@@ -88,7 +89,7 @@ void get_inputs() {
         printf("Enter the Inputs for training example[%d]:\n", i);
 
         for (int j = 0; j < num_neurons[0]; j++) {
-            scanf("%f", &input[i][j]);
+            scanf("%lf", &input[i][j]);
 
         }
         printf("\n");
@@ -101,7 +102,7 @@ void get_desired_outputs() {
         for (int j = 0; j < num_neurons[num_layers - 1]; j++) {
             printf("Enter the Desired Outputs (Labels) for training example[%d]: \n",
                    i);
-            scanf("%f", &desired_outputs[i][j]);
+            scanf("%lf", &desired_outputs[i][j]);
             printf("\n");
         }
     }
@@ -244,10 +245,10 @@ void forward_prop(void) {
 
 // Compute Total Cost
 void compute_cost(int i) {
-    float tcost = 0;
+    double tcost = 0;
 
     for (int j = 0; j < num_neurons[num_layers - 1]; j++) {
-        float tmpcost = desired_outputs[i][j] - lay[num_layers - 1].neu[j].actv;
+        double tmpcost = desired_outputs[i][j] - lay[num_layers - 1].neu[j].actv;
         cost[j] = (tmpcost * tmpcost) / 2;
         tcost = tcost + cost[j];
     }
@@ -308,18 +309,20 @@ void test_nn(void) {
         printf("Enter input to test:\n");
 
         for (int i = 0; i < num_neurons[0]; i++) {
-            scanf("%f", &lay[0].neu[i].actv);
+            scanf("%lf", &lay[0].neu[i].actv);
         }
         forward_prop();
     }
 }
 
-// TODO: Add different Activation functions
-//void activation_functions()
-
 int dinit(void) {
-    // TODO:
-    // Free up all the structures
+    // Free up all the structure
+    free(num_neurons);
+    free(input);
+    free(desired_outputs);
+    free(cost);
+    free(lay->neu);
+    free(lay);
 
     return SUCCESS_DINIT;
 }
