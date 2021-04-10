@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "recognize.h"
+#include "web_client.h"
 #include "../utils/file.h"
 #include "../utils/string_builder.h"
 
@@ -16,13 +17,13 @@ const char *REQUEST = "{\n"
 
 char *build_request(const char *lang,
                     const char *filename,
-                    unsigned int sample_rate) {
+                    unsigned int sample_rate,
+                    unsigned long *length) {
   // Read base64 audio file
-  unsigned long length;
-  char *content = file_read_content(filename, &length);
+  char *content = file_read_content(filename, length);
 
   // Max length of a string
-  unsigned long maxLength = length + strlen(REQUEST) * 2;
+  unsigned long maxLength = *length + strlen(REQUEST) * 2;
   StringBuilder *sb = sb_create();
   sb_appendf_l(sb, REQUEST, maxLength, sample_rate, lang, content);
 
@@ -38,8 +39,18 @@ char *sprec_recognize_base64(const char *apikey,
                              const char *lang,
                              const char *filename,
                              unsigned int sample_rate) {
+  unsigned long length;
+  char *request = build_request(lang, filename, sample_rate, &length);
+  sprec_server_response *res = sprec_send_audio_data(apikey, request, length);
+  return res->data;
+}
 
-  char *request = build_request(lang, filename, sample_rate);
-  //TODO: Send request and get result
-  return NULL;
+char *sprec_recognize_wav(const char *apikey,
+                             const char *lang,
+                             const char *filename,
+                             unsigned int sample_rate) {
+  unsigned long length;
+  void *data = file_read_content(filename, &length);
+  sprec_server_response *res = sprec_send_audio_data(apikey, data, length);
+  return res->data;
 }

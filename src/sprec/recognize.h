@@ -14,4 +14,7 @@
 char *sprec_recognize_base64(const char *apikey, const char *lang,
                              const char *filename, unsigned int sample_rate);
 
+char *sprec_recognize_wav(const char *apikey, const char *lang,
+                             const char *filename, unsigned int sample_rate);
+
 #endif //HEYMORTY_SRC_SPREC_RECOGNIZE_H_

@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include "file.h"
 
-char *file_read_content(const char *filename, unsigned long *length) {
+void *file_read_content(const char *filename, unsigned long *length) {
   FILE *file = fopen(filename, "rb");
-  char *content;
+  void *content;
   if (file == NULL)
     errx(EXIT_FAILURE, "Failed to open audio utils %s", filename);
 
@@ -15,7 +15,7 @@ char *file_read_content(const char *filename, unsigned long *length) {
   fseek(file, 0, SEEK_SET);
 
   // Read content
-  content = malloc(*length * sizeof(char));
+  content = malloc(*length * sizeof(void));
   if (content == NULL)
     errx(EXIT_FAILURE, "Failed to store content");
   fread(content, 1, *length, file);
