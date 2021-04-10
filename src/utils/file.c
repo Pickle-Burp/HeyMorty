@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "file.h"
 
-char *file_read_content(const char *filename, const unsigned long *length) {
+char *file_read_content(const char *filename, unsigned long *length) {
   FILE *file = fopen(filename, "rb");
   char *content;
   if (file == NULL)
