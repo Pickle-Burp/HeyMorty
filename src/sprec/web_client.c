@@ -4,7 +4,8 @@
 #include "web_client.h"
 #include "../utils/string_builder.h"
 
-#define URL "https://www.google.com/speech-api/v2/recognize?output=json&key=AIzaSyA4e_DmX-kxzXvGiUtrkrRSTxM4Pa5zIEA&lang=fr-FR"
+#define URL "https://www.google.com/speech-api/v2/recognize?output=json&key=%s&lang=%s"
+#define CONTENT_TYPE "Content-Type: audio/l16; rate=%lu;"
 
 static size_t http_callback(char *ptr, size_t count, size_t blocksize, void
 *userdata);
@@ -13,7 +14,9 @@ sprec_server_response *
 sprec_send_audio_data(
     const char *apikey,
     const void *data,
-    size_t length
+    size_t length,
+    const char *lang,
+    unsigned long sampleRate
 ) {
   CURL *curl;
   sprec_server_response *resp;
@@ -33,22 +36,12 @@ sprec_send_audio_data(
 
   struct curl_list *headers = NULL;
   curl_slist_append(headers, "Expect:");
-  headers = curl_slist_append(headers,
-                              "Content-Type: audio/l16; rate=16000;");
-  /*char tkn_header[512];
-  sprintf(tkn_header, "Authorization: Bearer %s", apikey);
-  headers = curl_slist_append(headers, tkn_header);*/
-
-  curl_easy_setopt(curl, CURLOPT_URL, URL);
+  headers = curl_slist_append(headers, sb_format(CONTENT_TYPE, sampleRate));
+  curl_easy_setopt(curl, CURLOPT_URL, sb_format(URL, apikey, lang));
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
   // SSL certificates are not available, so we have to trust Google
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
-
-  //curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
-  //curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, length);
-//  curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, http_callback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, resp);
 

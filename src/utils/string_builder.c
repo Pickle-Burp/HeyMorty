@@ -88,6 +88,33 @@ unsigned long sb_appendf_l(StringBuilder *sb, const char *format,
   return sb_append(sb, buf);
 }
 
+/**
+ * Format a string with the given parameters. User must free the returned
+ * string.
+ *
+ * @param format The string to format
+ * @param ...    The format parameters
+ * @return A copy of the given string, formatted
+ */
+char *sb_format(const char *format, ...) {
+  StringBuilder *builder = sb_create();
+  va_list args;
+
+  va_start (args, format);
+  // Process string
+  int rc;
+  char buf[SB_MAX_FRAG_LENGTH];
+  rc = vsnprintf(&buf[0], SB_MAX_FRAG_LENGTH, format, args);
+  if (0 > rc)
+    return SB_FAILURE;
+
+  sb_append(builder, buf);
+  va_end(args);
+  char *res = sb_concat(builder);
+  sb_free(builder);
+  return res;
+}
+
 /*
  * sb_concat returns a concatenation of strings that have been appended to the
  * StringBuilder. It is the callers responsibility to free the returned

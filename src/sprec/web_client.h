@@ -29,7 +29,9 @@ sprec_server_response *
 sprec_send_audio_data(
     const char *apikey,
     const void *data,
-    size_t length
+    size_t length,
+    const char *lang,
+    unsigned long sampleRate
 );
 
 void sprec_free_response(sprec_server_response *resp);
