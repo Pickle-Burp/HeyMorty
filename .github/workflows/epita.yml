@@ -1,6 +1,6 @@
 name: EPITA
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:

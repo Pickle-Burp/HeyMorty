@@ -47,14 +47,14 @@ char *sprec_recognize_base64(const char *apikey,
 }
 
 char *sprec_recognize_wav(const char *apikey,
-                             const char *lang,
-                             const char *filename,
-                             unsigned int sample_rate) {
+                          const char *lang,
+                          const char *filename,
+                          unsigned int sample_rate) {
   unsigned long length;
   void *data = file_read_content(filename, &length);
   sprec_server_response *res = sprec_send_audio_data(apikey, data, length,
                                                      lang, sample_rate);
-  char * copy = malloc(strlen(res->data) + 1);
+  char *copy = malloc(strlen(res->data) + 1);
   strcpy(copy, res->data);
   sprec_free_response(res);
   return copy;
