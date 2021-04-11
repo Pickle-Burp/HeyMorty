@@ -147,6 +147,7 @@ int create_architecture() {
     return SUCCESS_CREATE_ARCHITECTURE;
 }
 
+//Initialize weights
 int initialize_weights(void) {
     if (lay == NULL) {
         printf("No layers in Neural Network...\n");
@@ -196,7 +197,7 @@ void train_neural_net(void) {
     }
 }
 
-
+//Update weights (back propagation)
 void update_weights(void) {
     for (int i = 0; i < num_layers - 1; i++) {
         for (int j = 0; j < num_neurons[i]; j++) {
@@ -213,6 +214,7 @@ void update_weights(void) {
     }
 }
 
+//Forward propagation
 void forward_prop(void) {
     for (int i = 1; i < num_layers; i++) {
         for (int j = 0; j < num_neurons[i]; j++) {
@@ -248,7 +250,8 @@ void compute_cost(int i) {
     double tcost = 0;
 
     for (int j = 0; j < num_neurons[num_layers - 1]; j++) {
-        double tmpcost = desired_outputs[i][j] - lay[num_layers - 1].neu[j].actv;
+        double tmpcost =
+                desired_outputs[i][j] - lay[num_layers - 1].neu[j].actv;
         cost[j] = (tmpcost * tmpcost) / 2;
         tcost = tcost + cost[j];
     }
@@ -304,6 +307,7 @@ void back_prop(int p) {
 }
 
 // Test the trained network
+//Never stop, except if the user kills the process, the neural network can be tested forever
 void test_nn(void) {
     while (1) {
         printf("Enter input to test:\n");
@@ -317,11 +321,21 @@ void test_nn(void) {
 
 int dinit(void) {
     // Free up all the structure
+    for (int i = 0; i < num_layers; i++) {
+        for (int j = 0; j < num_neurons[i]; j++) {
+            free(lay[i].neu[j].out_weights);
+            free(lay[i].neu[j].dw);
+        }
+        free(lay[i].neu);
+    }
     free(num_neurons);
+    for (int i = 0; i < num_training_ex; i++) {
+        free(input[i]);
+        free(desired_outputs[i]);
+    }
     free(input);
     free(desired_outputs);
     free(cost);
-    free(lay->neu);
     free(lay);
 
     return SUCCESS_DINIT;

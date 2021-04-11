@@ -11,8 +11,7 @@
 #include <string.h>
 #include <math.h>
 
-typedef struct neuron_t
-{
+typedef struct neuron_t {
     double actv;
     double *out_weights;
     double bias;

@@ -4,13 +4,13 @@
 
 #ifndef HEYMORTY_LAYER_H
 #define HEYMORTY_LAYER_H
+
 #include "neuron.h"
 #include <errno.h>
 #include <limits.h>
 
 
-typedef struct layer_t
-{
+typedef struct layer_t {
     int num_neu;
     struct neuron_t *neu;
 } layer;
