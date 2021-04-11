@@ -51,7 +51,7 @@ sprec_send_audio_data(
       CURLFORM_COPYNAME,
       "myfile",
       CURLFORM_CONTENTSLENGTH,
-      (long)length,
+      (long) length,
       CURLFORM_PTRCONTENTS,
       data,
       CURLFORM_END
