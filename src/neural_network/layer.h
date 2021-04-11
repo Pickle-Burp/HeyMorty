@@ -9,10 +9,9 @@
 #include <errno.h>
 #include <limits.h>
 
-
 typedef struct layer_t {
-    int num_neu;
-    struct neuron_t *neu;
+  int num_neu;
+  struct neuron_t *neu;
 } layer;
 
 /**

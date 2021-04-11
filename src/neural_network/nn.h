@@ -18,11 +18,9 @@
 #define SUCCESS_CREATE_ARCHITECTURE 0
 #define ERR_CREATE_ARCHITECTURE 1
 
-
 int init(void);
 
 int dinit(void);
-
 
 /**
  *
@@ -30,13 +28,11 @@ int dinit(void);
  */
 int create_architecture(void);
 
-
 /**
  *
  * @return the weight of a layer on success, return an error otherwise.
  */
 int initialize_weights(void);
-
 
 /**
  * Feed inputs to input layer
@@ -44,26 +40,22 @@ int initialize_weights(void);
  */
 void feed_input(int i);
 
-
 /**
  *train the neural network using gradient descent
  * calls all the needed functions.
  */
 void train_neural_net(void);
 
-
 /**
  *forward propagation function.
  */
 void forward_prop(void);
-
 
 /**
  *compute total cost
  * @param i is the i-th training example.
  */
 void compute_cost(int i);
-
 
 /**
  *
@@ -72,28 +64,26 @@ void compute_cost(int i);
  */
 void back_prop(int p);
 
-
 /**
  * update the weights and bias for every epoch.
  */
 void update_weights(void);
-
 
 /**
  * store the training example given by the user.
  */
 void get_inputs(void);
 
-
 /**
  * store output labels for the training.
  */
 void get_desired_outputs(void);
 
-
 /**
  * get and compute the test the user want to do.
  */
 void test_nn(void);
+
+void test_neural_network();
 
 #endif //HEYMORTY_BACKPROPAGATION_H
