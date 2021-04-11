@@ -1,0 +1,16 @@
+name: EPITA
+
+on: [ push ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install deps
+        run: |
+          sudo apt-get update -y -qq
+          sudo apt install cmake libcurl4-openssl-dev libflac-dev libasound-dev
+      - name: Make the projet
+        run: |
+          make
