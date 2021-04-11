@@ -17,6 +17,12 @@ endif ()
 
 add_executable(HeyMorty
         src/main.c
+        src/neural_network/layer.h
+        src/neural_network/layer.c
+        src/neural_network/neuron.h
+        src/neural_network/neuron.c
+        src/neural_network/nn.h
+        src/neural_network/nn.c
         src/sprec/sprec.h
         src/sprec/recognize.h
         src/sprec/recognize.c
@@ -32,7 +38,4 @@ target_link_libraries(HeyMorty curl)
 target_link_libraries(HeyMorty FLAC)
 target_link_libraries(HeyMorty asound)
 target_link_libraries(HeyMorty Threads::Threads)
-
-add_executable(HeyMortyxor src/xor.c src/neuron.c src/neuron.h src/layer.h src/layer.c src/backpropagation.h)
-
-target_link_libraries(HeyMortyxor m)
+target_link_libraries(HeyMorty m)
