@@ -67,8 +67,6 @@ void test_neural_network() {
   if (dinit() != SUCCESS_DINIT) {
     printf("Error in Dinitialization...\n");
   }
-
-  return 0;
 }
 
 int init() {
