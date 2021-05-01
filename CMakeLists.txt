@@ -4,8 +4,7 @@ project(HeyMorty C)
 set(CMAKE_C_STANDARD 99)
 
 find_library(curl curl)
-find_library(flac flac)
-find_library(asound asound)
+find_library(tensorflow libtensorflow-bin)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -34,10 +33,10 @@ add_executable(HeyMorty
         src/utils/file.c
         src/utils/string_builder.h
         src/utils/string_builder.c
-        )
+        src/neural_network/cnn.c
+        src/neural_network/cnn.h)
 
 target_link_libraries(HeyMorty curl)
-target_link_libraries(HeyMorty FLAC)
-target_link_libraries(HeyMorty asound)
 target_link_libraries(HeyMorty Threads::Threads)
 target_link_libraries(HeyMorty m)
+target_link_libraries(HeyMorty tensorflow)
