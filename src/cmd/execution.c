@@ -17,10 +17,13 @@ int is_in(char *text, char *search, int nb_word){
 }
 
 
-const char *convert_to_command(char **text, int nb_word) {
+const char *convert_to_command(char **text, int nb_word){
   char *command = "";
   if(is_in(*text, "ouvre", nb_word) == TRUE)
     command = text[nb_word - 1];
+  else if(is_in(*text, "recherche", nb_word) == TRUE){
+    
+  }
   return command;
 }
 
