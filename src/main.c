@@ -28,7 +28,9 @@ int main(int argc, char **argv) {
 //      printf("%s ", text[n]);
       n++;
     }
+//    printf("\n");
     const char *command = convert_to_command(text, n);
+    printf("%s\n", command);
     command_exec(command);
     return 0;
   }
