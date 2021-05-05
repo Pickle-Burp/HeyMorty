@@ -34,7 +34,7 @@ const char *convert_to_command(char **text, int nb_word){
       // TODO : find and launch the default browser
       printf("first i:%i j:%i k:%i n:%i\n", i, j, k, nb_word);
       strcat(command, "firefox");
-      strcat(command, " \"");
+      strcat(command, " \"google.com/search?q=");
       strcat(command, *(text + 1));
       strcat(command, "\"");
     }
@@ -43,7 +43,7 @@ const char *convert_to_command(char **text, int nb_word){
       if(j == 1 || k == 1){
         printf("second\n");
         strcat(command, text[i + 1]);
-        strcat(command, " \"");
+        strcat(command, " \"google.com/search?q=");
         strcat(command, *(text + i + 2)); // didn't work : take just the first
         strcat(command, "\"");
       }
@@ -51,7 +51,7 @@ const char *convert_to_command(char **text, int nb_word){
       else{
         printf("third\n");
         strcat(command, text[nb_word - 1]);
-        strcat(command, " \"");
+        strcat(command, " \"google.com/search?q=");
         for(int k = i; k < nb_word - 2; k++){
           strcat(command, text[i]);
           strcat(command, " ");
