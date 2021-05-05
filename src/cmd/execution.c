@@ -23,7 +23,7 @@ int is_in(char **text, char *search, int nb_word){
 const char *convert_to_command(char **text, int nb_word){
   // TODO : look for strstr(char, char) & gstring
   
-  char *command = malloc(128*sizeof(char));
+  char *command = malloc(256*sizeof(char));
   int i = 0, j = 0, k = 0;
 
   /* to open an application */
@@ -46,7 +46,10 @@ const char *convert_to_command(char **text, int nb_word){
       printf("no browser specified\n");
       strcat(command, "firefox");
       strcat(command, " \"google.com/search?q=");
-      strcat(command, *(text + i));
+      for(int x = i + 1; i < nb_word; x++){
+        strcat(command, text[x]);
+        strcat(command, " ");
+      }
       strcat(command, "\"");
     }
     
@@ -58,7 +61,10 @@ const char *convert_to_command(char **text, int nb_word){
         printf("browser specified at the begining\n");
         strcat(command, text[i + 1]);
         strcat(command, " \"google.com/search?q=");
-        strcat(command, *(text + i + 2)); // didn't work : take just the first
+        for(int x = 1 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
+          strcat(command, text[x]);
+          strcat(command, " ");
+        }
         strcat(command, "\"");
       }
 
