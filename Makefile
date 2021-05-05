@@ -5,7 +5,7 @@ HEADER	= $(shell find $(SOURCEDIR) -regex ' .*\.\(h\)$')
 OUT		= hey_morty
 CC		= gcc
 FLAGS	= -g -c -Wall
-LFLAGS	= -lm -lcurl -ltensorflow
+LFLAGS	= -lm -lcurl -ltensorflow -gtk+-3.0
 
 all: $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
