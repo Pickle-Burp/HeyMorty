@@ -11,7 +11,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-      - name: Install deps
+      - name: Install Tensorflow
+        run: |
+          wget https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-2.4.0.tar.gz
+          sudo tar -C /usr/local -xzf libtensorflow-cpu-linux-x86_64-2.4.0.tar.gz
+          sudo ldconfig
+      - name: Install Other
         run: |
           sudo apt-get update -y -qq
           python -m pip install --upgrade pip setuptools wheel
