@@ -320,7 +320,8 @@ int main(void)
     delayCntr = 0;
     while( delayCntr++ < NUM_SECONDS )
     {
-        printf("index = %d\n", data.frameIndex ); fflush(stdout);
+        printf("index = %d\n", data.frameIndex );
+        fflush(stdout);
         Pa_Sleep(1000);
     }
     if( err < 0 ) goto done;
