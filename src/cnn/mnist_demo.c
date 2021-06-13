@@ -5,10 +5,10 @@
 int main() {
     srand(time(NULL));
 
-    Dataset mnist = MNIST("DATASETS/mnist/train-images",
-                          "DATASETS/mnist/train-labels",
-                          "DATASETS/mnist/test-images",
-                          "DATASETS/mnist/test-labels");
+    Dataset mnist = MNIST("src/cnn/DATASETS/mnist/train-images",
+                          "src/cnn/DATASETS/mnist/train-labels",
+                          "src/cnn/DATASETS/mnist/test-images",
+                          "src/cnn/DATASETS/mnist/test-labels");
 
     // Initialize neural network
     unsigned int nnShape[] = {784, 16, 16, 10};
