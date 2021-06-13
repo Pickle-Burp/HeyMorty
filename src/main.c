@@ -20,15 +20,13 @@ int main(int argc, char **argv) {
   }
   if (strcmp(argv[1], "cmd") == 0) {
     if(argc < 3)
-      errx(EXIT_FAILURE, "No enough args. ./hey_morty audio text");
+      errx(EXIT_FAILURE, "No enough args. ./hey_morty cmd text");
     
     char **text = argv+2;
     int n = 0;
     while (text[n] != NULL) {
-//      printf("%s ", text[n]);
       n++;
     }
-//    printf("\n");
     const char *command = convert_to_command(text, n);
     printf("%s\n", command);
     command_exec(command);
