@@ -6,6 +6,6 @@ stdenv.mkDerivation {
       pkg-config
       curl
       libtensorflow-bin
-      gnome3.gtk
+      gtk3
   ];
 }

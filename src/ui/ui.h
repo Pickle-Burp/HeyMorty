@@ -5,27 +5,28 @@
 #include <stdlib.h>
 #include <glib/gi18n.h>
 
-#include "../main.h"
 
 typedef struct Ui{
     GtkWidget *pWindow;
+    GtkWidget *pWindowHelp;
     GtkWidget *pLabel;
-    GtkWidget *pLabel2;
+    GtkWidget *pLabelHelp;
     GtkWidget *Box;
+    GtkWidget *BoxHelp;
     GtkWidget *IBox;
-    GtkWidget *Open_button;
-    GtkWidget *Start_button;
-    GtkWidget *Download_button;
+    GtkWidget *IBoxHelp;
+    GtkWidget *Voice_button;
+    GtkWidget *Help_button;
+    GtkWidget *Return_button;
     GtkWidget *image;
     gchar *text;
-    gchar *text2;
+    gchar *textHelp;
     gchar* filename;
     char* text_ocr;
 } Ui;
 
-static void select_image(void);
-void start(void);
-void download_doc(void);
+void start_process(void);
+void aled(void);
 int main(int argc, char **argv);
 
 #endif
