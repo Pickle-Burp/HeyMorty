@@ -5,11 +5,25 @@ hash_table* htable;
 // maximum length for a word
 const int MAX_WORD_LEN = 45;
 
+void hash_print(int i) {
+
+    hash_node *curr;
+
+    printf("------- Printing Hash Table ------ \n");
+    //for ( i = 0; i < HASH_TABLE_SIZE; i++ ) {
+        curr = htable->nodes[i];
+        while ( curr != NULL ) {
+            printf( "Key: %s\n ",  curr->word);
+            curr = curr->next;
+        }
+    //}
+    printf("------- End of table --------\n");
+}
+
 char** spell_check(char **text, int nb_word){
     // load dictionary;
     char *dict = WORDS;
     bool loaded = load(dict);
-
     // abort if dictionary not loaded
     if(!loaded)
         err(1, "Could not load dictionnary");
@@ -19,7 +33,7 @@ char** spell_check(char **text, int nb_word){
         bool misspelled = !check(text[i]);
         if (misspelled)
             // TODO : correct the word
-            printf("%s\n", text[i]);
+            printf("misspelled: %s\n", text[i]);
     }
     return text;
 }
@@ -118,19 +132,20 @@ hash_node* create_hash_node( const char *word){
 bool check(char *word){
     int hash_tmp;
     hash_node *curr;
-    char tmp[MAX_WORD_LEN + 1];
 
     //  Create a key for the tmp by putting it in the hash function
-    hash_tmp = hash_func(tmp);
+    hash_tmp = hash_func(word);
     // set the new hashed tmp to a curr node
     curr = htable->nodes[hash_tmp];
 
     // While the node is not null see if the new node is equal to the tmp
     while (curr != NULL){
-        if (strcmp (tmp, curr->word) == 0) {
+        if (strcmp (word, curr->word) == 0) {
             return true;
         }
         curr = curr->next;
     }
     return false;
 }
+
+

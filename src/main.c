@@ -33,7 +33,6 @@ int main(int argc, char **argv) {
       n++;
     }
     char **checked_text = spell_check(text, n);
-    printf("%s\n", *checked_text);
     const char *command = convert_to_command(checked_text, n);
     printf("%s\n", command);
     command_exec(command);
