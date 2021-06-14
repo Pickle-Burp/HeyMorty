@@ -1,5 +1,5 @@
 TARGET	= hey_morty
-OBJS	= src/main.o src/cmd/execution.o src/neural_network/layer.o src/neural_network/neuron.o src/neural_network/nn.o src/sprec/recognize.o src/sprec/web_client.o src/utils/file.o src/utils/string_builder.o src/neural_network/cnn.o
+OBJS	= src/main.o src/cmd/execution.o src/cmd/spell_check.o src/neural_network/layer.o src/neural_network/neuron.o src/neural_network/nn.o src/sprec/recognize.o src/sprec/web_client.o src/utils/file.o src/utils/string_builder.o src/neural_network/cnn.o
 SOURCE	= $(shell find $(SOURCEDIR) -regex ' .*\.\(c\)$')
 HEADER	= $(shell find $(SOURCEDIR) -regex ' .*\.\(h\)$')
 OUT		= hey_morty

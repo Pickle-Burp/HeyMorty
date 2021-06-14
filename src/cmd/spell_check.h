@@ -12,8 +12,6 @@
 #include <math.h>
 
 #define HASH_TABLE_SIZE 65536
-// maximum length for a word
-const int MAX_WORD_LEN = 45;
 
 typedef struct hash_node{
     char  *word;

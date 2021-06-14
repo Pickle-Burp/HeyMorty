@@ -2,56 +2,93 @@
 #include <stdio.h>
 #include <err.h>
 #include <string.h>
+//#include <gmodule.h>
 
-#define OPEN "open"
-#define SHOW "show"
-#define SEARCH "search"
+#define FALSE 0
+#define TRUE 1
 
-char **cut_text(char **text, int nb_word) {
-  char **cutting_command;
-  if (text[0] == "lance" || text[0] == "ouvre") {
-    cutting_command[0] = OPEN;
-    cutting_command[1] = text[1];
+
+int is_in(char **text, char *search, int nb_word){
+  // TODO ? supp found -> return i / -1
+  int i = 0;
+  while(i < nb_word){
+    if(strcmp(text[i], search) == 0)
+      return i;
+    i++;
   }
-  if (text[0] == "montre-moi") {
-    cutting_command[0] = SHOW;
-    cutting_command[1] = text[nb_word - 2];
-    cutting_command[2] = text[nb_word - 1];
-  }
-  if (text[0] == "cherche") {
-    cutting_command[0] = SEARCH;
-    cutting_command[1] = text[nb_word - 1];
-    for (int i = 1; i < nb_word - 2; i++)
-      strcat(cutting_command[2], text[i]);
-  }
-  return cutting_command;
+  return i;
 }
 
-const char *convert_to_command(char **tab_command) {
-  char *command = "";
-  if (tab_command[0] == OPEN)
-    command = tab_command[1];
-  else if (tab_command[0] == SEARCH) {
-    strcat(command, tab_command[1]);
-    strcat(command, " ");
-    strcat(command, "\"");
-    strcat(command, tab_command[2]);
-    strcat(command, "\"");
-  } else if (tab_command[0] == SHOW) {
-    if (tab_command[1] == "dossier") {
-      strcat(command, "ls ");
-      strcat(command, tab_command[2]);
-    } else {
-      strcat(command, "cat");
-      strcat(command, tab_command[2]);
+
+const char *convert_to_command(char **text, int nb_word){
+  // TODO : look for strstr(char, char) & gstring
+  
+  char *command = calloc(256, sizeof(char));
+  printf("%s\n", command);
+  int i = 0, j = 0, k = 0;
+
+  /* to open an application */
+  if((i = is_in(text, "ouvre", nb_word)) != nb_word){
+    if(nb_word == 1)
+      err(1, "You must enter the application to open");
+    j = is_in(text, "application", nb_word);
+    command = *(text + (j == nb_word ? i + 1 : j + 1));
+  }
+  
+  /* to make a research */
+  else if((i = is_in(text, "recherche", nb_word)) != nb_word){
+    if(nb_word == 1)
+      err(1, "You must enter a search");
+
+    /* if no browser specified, default browser */
+    if((j = is_in(text, "sur", nb_word)) == nb_word &&
+          (k = is_in(text, "dans", nb_word)) == nb_word){
+      // TODO : find and launch the default browser
+      printf("no browser specified\n");
+      strcat(command, "firefox");
+      strcat(command, " \"google.com/search?q=");
+      for(int x = i + 1; x < nb_word; x++){
+        strcat(command, text[x]);
+        strcat(command, " ");
+      }
+      strcat(command, "\"");
+    }
+    
+    /* Browser specified */
+    else{ 
+      /* browser specified after the search */
+      if(j == nb_word - 2 || k == nb_word - 2){
+        printf("browser specified at the end\n");
+        strcat(command, text[nb_word - 1]);
+        strcat(command, " \"google.com/search?q=");
+        for(int x = i + 1; x < nb_word - 2; x++){
+          strcat(command, text[x]);
+          strcat(command, " ");
+        }
+        strcat(command, "\"");
+      }
+
+      /* browser specified before the search */
+      else{
+        printf("browser specified at the begining\n");
+        strcat(command, text[i + 2]);
+        strcat(command, " \"google.com/search?q=");
+        for(int x = 2 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
+          strcat(command, text[x]);
+          strcat(command, " ");
+        }
+        strcat(command, "\"");
+      }
     }
   }
+  printf("%s\n", command);
   return command;
 }
 
-void command_exec(const char *command) {
-  if (system(NULL) == 0)
+
+void command_exec(const char *command){
+  if(system(NULL) == 0)
     printf("No shell available");
-  if (system(command) == -1)
+  if(system(command) == -1)
     printf("The command to execute can not be executed");
 }

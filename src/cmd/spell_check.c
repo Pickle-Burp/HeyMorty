@@ -2,6 +2,8 @@
 
 char *WORDS = "words.txt";
 hash_table* htable;
+// maximum length for a word
+const int MAX_WORD_LEN = 45;
 
 char** spell_check(char **text, int nb_word){
     // load dictionary;
@@ -114,7 +116,6 @@ hash_node* create_hash_node( const char *word){
 
 /* Returns true if word is in dictionary else false. */
 bool check(char *word){
-    int i;
     int hash_tmp;
     hash_node *curr;
     char tmp[MAX_WORD_LEN + 1];
