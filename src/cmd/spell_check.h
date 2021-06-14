@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+
 #define HASH_TABLE_SIZE 65536
 
 typedef struct hash_node{
@@ -22,6 +23,7 @@ typedef struct hash_table{
     int numwords;
     hash_node **nodes;
 } hash_table;
+
 
 char **spell_check(char **text, int nb_word);
 bool load(char *dict);

@@ -5,18 +5,18 @@ hash_table* htable;
 // maximum length for a word
 const int MAX_WORD_LEN = 45;
 
-void hash_print(int i) {
-
+void hash_print() {
+    int i = 0;
     hash_node *curr;
 
     printf("------- Printing Hash Table ------ \n");
-    //for ( i = 0; i < HASH_TABLE_SIZE; i++ ) {
+    for ( i = 0; i < HASH_TABLE_SIZE; i++ ) {
         curr = htable->nodes[i];
         while ( curr != NULL ) {
             printf( "Key: %s\n ",  curr->word);
             curr = curr->next;
         }
-    //}
+    }
     printf("------- End of table --------\n");
 }
 
@@ -132,7 +132,7 @@ hash_node* create_hash_node( const char *word){
 bool check(char *word){
     int hash_tmp;
     hash_node *curr;
-
+    
     //  Create a key for the tmp by putting it in the hash function
     hash_tmp = hash_func(word);
     // set the new hashed tmp to a curr node
@@ -147,5 +147,3 @@ bool check(char *word){
     }
     return false;
 }
-
-
