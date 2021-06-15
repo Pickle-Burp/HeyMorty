@@ -3,7 +3,7 @@
 #include <err.h>
 #include <string.h>
 
-
+/* Check if a word is in a text */
 int is_in(char **text, char *search, int nb_word){
   int i = 0;
   while(i < nb_word){
@@ -14,6 +14,7 @@ int is_in(char **text, char *search, int nb_word){
   return i;
 }
 
+/* Convert a text into a linux command */
 const char *convert_to_command(char **text, int nb_word){
   char *command = calloc(256, sizeof(char));
   printf("%s\n", command);
@@ -32,13 +33,10 @@ const char *convert_to_command(char **text, int nb_word){
     if(nb_word == 1)
       err(1, "You must enter a search");
 
-    /* if no browser specified, default browser */
+    // if no browser specified, default browser
     if((j = is_in(text, "sur", nb_word)) == nb_word &&
           (k = is_in(text, "dans", nb_word)) == nb_word){
-      // TODO : find and launch the default browser
-      printf("no browser specified\n");
-      strcat(command, "firefox");
-      strcat(command, " \"google.com/search?q=");
+      strcat(command, "xdg-open \"https://www.google.com/search?q=");
       for(int x = i + 1; x < nb_word; x++){
         strcat(command, text[x]);
         strcat(command, " ");
@@ -46,11 +44,10 @@ const char *convert_to_command(char **text, int nb_word){
       strcat(command, "\"");
     }
     
-    /* Browser specified */
+    // Browser specified
     else{ 
-      /* browser specified after the search */
+      // browser specified after the search
       if(j == nb_word - 2 || k == nb_word - 2){
-        printf("browser specified at the end\n");
         strcat(command, text[nb_word - 1]);
         strcat(command, " \"google.com/search?q=");
         for(int x = i + 1; x < nb_word - 2; x++){
@@ -60,9 +57,8 @@ const char *convert_to_command(char **text, int nb_word){
         strcat(command, "\"");
       }
 
-      /* browser specified before the search */
+      // browser specified before the searc
       else{
-        printf("browser specified at the begining\n");
         strcat(command, text[i + 2]);
         strcat(command, " \"google.com/search?q=");
         for(int x = 2 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
@@ -73,13 +69,12 @@ const char *convert_to_command(char **text, int nb_word){
       }
     }
   }
-  printf("%s\n", command);
   return command;
 }
 
 void command_exec(const char *command){
   if(system(NULL) == 0)
-    printf("No shell available");
+    err(1, "No shell available");
   if(system(command) == -1)
-    printf("The command to execute can not be executed");
+    err(1, "The command to execute can not be executed");
 }

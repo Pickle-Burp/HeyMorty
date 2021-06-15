@@ -5,7 +5,7 @@ hash_table *hashTable;
 // maximum length for a word
 const int MAX_WORD_LEN = 45;
 // dictionary lines number
-const int NB_LINES = 323579;
+const int NB_LINES = 32380;
 
 /* Check each word and correct it if necessary */
 char **spell_check(char **text, int nb_word){
