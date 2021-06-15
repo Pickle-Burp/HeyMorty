@@ -18,14 +18,23 @@ int is_in(char **text, char *search, int nb_word){
 const char *convert_to_command(char **text, int nb_word){
   char *command = calloc(256, sizeof(char));
   printf("%s\n", command);
-  int i = 0, j = 0, k = 0;
+  int i = 0, j = 0, k = 0, l = 0;
 
   /* to open an application */
   if((i = is_in(text, "ouvre", nb_word)) != nb_word){
     if(nb_word == 1)
       err(1, "You must enter the application to open");
     j = is_in(text, "application", nb_word);
-    command = *(text + (j == nb_word ? i + 1 : j + 1));
+    k = is_in(text, "l'application", nb_word);
+    l = is_in(text, "lapplication", nb_word);
+    command = *(text +
+            (j == nb_word
+            ? (k == nb_word
+                ? (l == nb_word
+                    ? i + 1
+                    : l + 1)
+                : k + 1)
+            : j + 1));
   }
   
   /* to make a research */
