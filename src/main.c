@@ -34,12 +34,7 @@ int main(int argc, char **argv) {
     }
     char **checked_text = spell_check(text, n);
     const char *command = convert_to_command(checked_text, n);
-    printf("%s\n", command);
     command_exec(command);
-    return 0;
-  }
-  if (strcmp(argv[1], "nn") == 0) {
-    test_neural_network();
     return 0;
   }
   return 0;

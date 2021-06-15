@@ -3,10 +3,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#include <sys/resource.h>
-#include <sys/times.h>
 #include <err.h>
-#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
@@ -26,9 +23,9 @@ typedef struct hash_table{
 
 
 char **spell_check(char **text, int nb_word);
-bool load(char *dict);
+int load(char *dict);
 hash_table *hash_create();
-bool hash_insert(char *word);
+int hash_insert(char *word);
 int hash_func(char *word);
 hash_node *create_hash_node(const char *word);
 int check(char *word, char **closest_word);
