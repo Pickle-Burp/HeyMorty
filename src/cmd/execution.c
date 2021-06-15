@@ -64,7 +64,6 @@ const char *convert_to_command(char **text, int nb_word){
         strcat(command, "\"");
       }
 
-      for(int x = i; x < nb_word - 2; x++){
       /* browser specified before the search */
       else{
         printf("browser specified at the begining\n");
