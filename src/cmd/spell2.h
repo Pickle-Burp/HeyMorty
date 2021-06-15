@@ -12,8 +12,11 @@
 #include <math.h>
 
 int levenshtein(const char *s, int ls, const char *t, int lt);
+
 char *correct(char *word, char **word_list);
-char** spell_check(char **text, int nb_word);
+
+char **spell_check(char **text, int nb_word);
+
 void load(char *dict, char **word_list);
 
 #endif

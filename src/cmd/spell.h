@@ -15,7 +15,7 @@
 #define HASH_TABLE_SIZE 65536
 
 typedef struct hash_node{
-    char  *word;
+    char *word;
     struct hash_node *next;
 } hash_node;
 
@@ -26,11 +26,17 @@ typedef struct hash_table{
 
 
 char **spell_check(char **text, int nb_word);
+
 bool load(char *dict);
-hash_table* hash_create();
+
+hash_table *hash_create();
+
 bool hash_insert(char *word);
-int hash_func(char* word);
-hash_node* create_hash_node(const char *word);
+
+int hash_func(char *word);
+
+hash_node *create_hash_node(const char *word);
+
 bool check(char *word);
 
 #endif

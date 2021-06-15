@@ -1,4 +1,4 @@
-#include "spell_check.h"
+#include "spell2.h"
 
 char *WORDS = "words.txt";
 // maximum length for a word
@@ -12,13 +12,13 @@ int levenshtein(const char *s, int ls, const char *t, int lt){
     /* if either string is empty, difference is inserting all chars
      * from the other
      */
-    if (!ls) return lt;
-    if (!lt) return ls;
+    if(!ls) return lt;
+    if(!lt) return ls;
 
     /* if last letters are the same, the difference is whatever is
      * required to edit the rest of the strings
      */
-    if (s[ls - 1] == t[lt - 1])
+    if(s[ls - 1] == t[lt - 1])
         return levenshtein(s, ls - 1, t, lt - 1);
 
     /* else try:
@@ -31,8 +31,8 @@ int levenshtein(const char *s, int ls, const char *t, int lt){
     b = levenshtein(s, ls, t, lt - 1);
     c = levenshtein(s, ls - 1, t, lt);
 
-    if (a > b) a = b;
-    if (a > c) a = c;
+    if(a > b) a = b;
+    if(a > c) a = c;
 
     return a + 1;
 }
@@ -53,7 +53,7 @@ char *correct(char *word, char **word_list){
     return res;
 }
 
-char** spell_check(char **text, int nb_word){
+char **spell_check(char **text, int nb_word){
     // load dictionary;
     char *dict = WORDS;
     char **word_list = calloc(NB_LINES + 1, sizeof(char));
@@ -71,7 +71,7 @@ char** spell_check(char **text, int nb_word){
 
 /* Loads dict into memory. */
 void load(char *dict, char **word_list){
-    char word [MAX_WORD_LEN +1];
+    char word[MAX_WORD_LEN + 1];
     long i = 46570;
 
     // Open dictionary file
@@ -85,7 +85,7 @@ void load(char *dict, char **word_list){
         printf("%s\n", word);
         if(i < 46572)
             word_list[i] = word;
-        i ++;
+        i++;
     }
     fclose(dictfp);
 }
