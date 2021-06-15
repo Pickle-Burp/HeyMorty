@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <err.h>
 #include <string.h>
-//#include <gmodule.h>
 
 #define FALSE 0
 #define TRUE 1
@@ -18,7 +17,6 @@ int is_in(char **text, char *search, int nb_word){
   }
   return i;
 }
-
 
 const char *convert_to_command(char **text, int nb_word){
   // TODO : look for strstr(char, char) & gstring
