@@ -9,21 +9,18 @@
 
 
 int is_in(char **text, char *search, int nb_word){
-  // TODO ? supp found -> return i / -1
-  int i = 0, found = FALSE;
-  while(i < nb_word && found == FALSE){
+  int i = 0;
+  while(i < nb_word){
     if(strcmp(text[i], search) == 0)
-      found = TRUE;
+      return i;
     i++;
   }
   return i;
 }
 
-
 const char *convert_to_command(char **text, int nb_word){
-  // TODO : look for strstr(char, char) & gstring
-  
-  char *command = malloc(256*sizeof(char));
+  char *command = calloc(256, sizeof(char));
+  printf("%s\n", command);
   int i = 0, j = 0, k = 0;
 
   /* to open an application */
@@ -31,7 +28,7 @@ const char *convert_to_command(char **text, int nb_word){
     if(nb_word == 1)
       err(1, "You must enter the application to open");
     j = is_in(text, "application", nb_word);
-    command = *(text + (j == nb_word ? i : j));
+    command = *(text + (j == nb_word ? i + 1 : j + 1));
   }
   
   /* to make a research */
@@ -46,7 +43,7 @@ const char *convert_to_command(char **text, int nb_word){
       printf("no browser specified\n");
       strcat(command, "firefox");
       strcat(command, " \"google.com/search?q=");
-      for(int x = i + 1; i < nb_word; x++){
+      for(int x = i + 1; x < nb_word; x++){
         strcat(command, text[x]);
         strcat(command, " ");
       }
@@ -54,26 +51,26 @@ const char *convert_to_command(char **text, int nb_word){
     }
     
     /* Browser specified */
-    else{
-
-      /* browser specified before the search */
-      if(j != nb_word - 1 || k != nb_word - 1){
-        printf("browser specified at the begining\n");
-        strcat(command, text[i + 1]);
+    else{ 
+      /* browser specified after the search */
+      if(j == nb_word - 2 || k == nb_word - 2){
+        printf("browser specified at the end\n");
+        strcat(command, text[nb_word - 1]);
         strcat(command, " \"google.com/search?q=");
-        for(int x = 1 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
+        for(int x = i + 1; x < nb_word - 2; x++){
           strcat(command, text[x]);
           strcat(command, " ");
         }
         strcat(command, "\"");
       }
 
-      /* browser specified after the search */
+      for(int x = i; x < nb_word - 2; x++){
+      /* browser specified before the search */
       else{
-        printf("browser specified at the end\n");
-        strcat(command, text[nb_word - 1]);
+        printf("browser specified at the begining\n");
+        strcat(command, text[i + 2]);
         strcat(command, " \"google.com/search?q=");
-        for(int x = i; x < nb_word - 2; x++){
+        for(int x = 2 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
           strcat(command, text[x]);
           strcat(command, " ");
         }
@@ -81,6 +78,7 @@ const char *convert_to_command(char **text, int nb_word){
       }
     }
   }
+  printf("%s\n", command);
   return command;
 }
 

@@ -27,6 +27,8 @@ add_executable(HeyMorty
         src/main.c
         src/cmd/execution.h
         src/cmd/execution.c
+        src/cmd/spell_check.h
+        src/cmd/spell_check.c
         src/neural_network/layer.h
         src/neural_network/layer.c
         src/neural_network/neuron.h

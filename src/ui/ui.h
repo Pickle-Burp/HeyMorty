@@ -27,6 +27,6 @@ typedef struct Ui{
 
 void start_process(void);
 void aled(void);
-int main(int argc, char **argv);
+int ui_start(int argc, char **argv);
 
 #endif
