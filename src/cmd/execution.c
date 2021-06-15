@@ -2,10 +2,6 @@
 #include <stdio.h>
 #include <err.h>
 #include <string.h>
-//#include <gmodule.h>
-
-#define FALSE 0
-#define TRUE 1
 
 
 int is_in(char **text, char *search, int nb_word){
@@ -80,7 +76,6 @@ const char *convert_to_command(char **text, int nb_word){
   printf("%s\n", command);
   return command;
 }
-
 
 void command_exec(const char *command){
   if(system(NULL) == 0)

@@ -16,3 +16,4 @@ all: $(OBJS)
 clean:
 	rm -f $(OBJS) $(OUT)
 	rm -f *.o
+	rm hey_morty
