@@ -12,7 +12,6 @@ int main(int argc, char **argv) {
     errx(EXIT_FAILURE, "No enough args. ./hey_morty <audio/nn/cmd>");
   if (strcmp(argv[1], "audio") == 0) {
     if (argc < 3)
-
       errx(EXIT_FAILURE, "No enough args. ./hey_morty audio myFile.wav");
     char *txt = sprec_recognize_wav(getenv(API_KEY), LANG,
                                     argv[2], 16000);
@@ -22,7 +21,6 @@ int main(int argc, char **argv) {
   if (strcmp(argv[1], "cmd") == 0) {
     if(argc < 3)
       errx(EXIT_FAILURE, "No enough args. ./hey_morty cmd text");
-
     char **text = argv+2;
     int n = 0;
     while (text[n] != NULL) {
