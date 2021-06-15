@@ -3,7 +3,7 @@
 How to use:
 
 ```
-./hey_morty <audio/nn/cmd>
+./hey_morty <audio/nn/cmd/ui>
 ```
 
 ## Libraries :

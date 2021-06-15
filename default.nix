@@ -7,5 +7,5 @@ stdenv.mkDerivation {
       curl
       libtensorflow-bin
       gtk3
-  ];
+    ];
 }

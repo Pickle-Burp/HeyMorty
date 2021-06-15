@@ -36,8 +36,8 @@ int main(int argc, char **argv) {
       test_neural_network();
       return 0;
   }
-  if(strcmp(argv[1], "ui") == 0){
-    ui_start(0, NULL);
+  if (strcmp(argv[1], "nn") == 0) {
+    test_neural_network();
+    return 0;
   }
-  return 0;
 }

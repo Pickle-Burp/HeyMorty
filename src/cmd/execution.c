@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <err.h>
 #include <string.h>
+//#include <gmodule.h>
 
 #define FALSE 0
 #define TRUE 1
 
 
 int is_in(char **text, char *search, int nb_word){
-  // TODO ? supp found -> return i / -1
   int i = 0;
   while(i < nb_word){
     if(strcmp(text[i], search) == 0)
@@ -19,8 +19,6 @@ int is_in(char **text, char *search, int nb_word){
 }
 
 const char *convert_to_command(char **text, int nb_word){
-  // TODO : look for strstr(char, char) & gstring
-  
   char *command = calloc(256, sizeof(char));
   printf("%s\n", command);
   int i = 0, j = 0, k = 0;
@@ -66,6 +64,7 @@ const char *convert_to_command(char **text, int nb_word){
         strcat(command, "\"");
       }
 
+      for(int x = i; x < nb_word - 2; x++){
       /* browser specified before the search */
       else{
         printf("browser specified at the begining\n");
