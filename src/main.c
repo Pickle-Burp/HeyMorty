@@ -19,10 +19,6 @@ int main(int argc, char **argv) {
     printf("%s", txt);
     return 0;
   }
-  if (strcmp(argv[1], "nn") == 0) {
-    test_neural_network();
-    return 0;
-  }
   if (strcmp(argv[1], "cmd") == 0) {
     if(argc < 3)
       errx(EXIT_FAILURE, "No enough args. ./hey_morty cmd text");
@@ -36,6 +32,10 @@ int main(int argc, char **argv) {
     const char *command = convert_to_command(checked_text, n);
     command_exec(command);
     return 0;
+  }
+  if (strcmp(argv[1], "nn") == 0) {
+      test_neural_network();
+      return 0;
   }
   return 0;
 }
