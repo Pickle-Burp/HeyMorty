@@ -18,12 +18,15 @@ int main(int argc, char **argv) {
     if (argc < 3)
       errx(EXIT_FAILURE, "No enough args. ./hey_morty audio myFile.wav");
 
+    char *json = sprec_recognize_wav(getenv(API_KEY), LANG,
+                                     argv[2], 16000);
     // extract result
     struct json_object *parsed_json = json_tokener_parse(json);
     struct json_object *results = json_object_object_get(parsed_json,
                                                          "results");
     struct json_object *res = json_object_array_get_idx(results, 0);
-    struct json_object *alternatives = json_object_object_get(res, "alternatives");
+    struct json_object
+        *alternatives = json_object_object_get(res, "alternatives");
     struct json_object *alt = json_object_array_get_idx(alternatives, 0);
     struct json_object *conf = json_object_object_get(alt, "confidence");
     struct json_object *trans = json_object_object_get(alt, "transcript");
