@@ -21,12 +21,14 @@ typedef struct Ui{
     GtkWidget *image;
     gchar *text;
     gchar *textHelp;
-    gchar* filename;
-    char* text_ocr;
+    gchar *filename;
+    char *text_ocr;
 } Ui;
 
 void start_process(void);
+
 void aled(void);
+
 int ui_start(int argc, char **argv);
 
 #endif

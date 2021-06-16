@@ -35,7 +35,7 @@ const char *convert_to_command(char **text, int nb_word){
             command = "google-chrome-stable"; //google package name on nixos
     }
 
-    /* to find a file or directory */
+        /* to find a file or directory */
     else if(is_in(text, "trouve", nb_word) != nb_word){
         if(nb_word == 1)
             err(1, "You must enter the file or directory to find");
@@ -43,8 +43,7 @@ const char *convert_to_command(char **text, int nb_word){
         if((j = is_in(text, "fichier", nb_word)) != nb_word){
             strcat(command, "f -name \"");
             strcat(command, *(text + j + 1));
-        }
-        else if((k = is_in(text, "dossier", nb_word)) != nb_word){
+        } else if((k = is_in(text, "dossier", nb_word)) != nb_word){
             strcat(command, "d -name \"");
             strcat(command, *(text + k + 1));
         }
@@ -52,7 +51,7 @@ const char *convert_to_command(char **text, int nb_word){
         strcat(command, "-exec thunar ");
         strcat(command, "{} \\;");
     }
-            /* to make a research */
+        /* to make a research */
     else if((i = is_in(text, "recherche", nb_word)) != nb_word){
         if(nb_word == 1)
             err(1, "You must enter a search");
@@ -86,7 +85,7 @@ const char *convert_to_command(char **text, int nb_word){
 
                 // browser specified before the search
             else{
-                if(strcmp(text[i+2], "google") == 0 || strcmp(text[i+2], "chrome") == 0)
+                if(strcmp(text[i + 2], "google") == 0 || strcmp(text[i + 2], "chrome") == 0)
                     strcat(command, "google-chrome-stable"); //google package name on nixos
                 else
                     strcat(command, text[i + 2]);
@@ -100,11 +99,11 @@ const char *convert_to_command(char **text, int nb_word){
         }
     }
     return command;
-    }
+}
 
-    void command_exec(const char *command){
-        if(system(NULL) == 0)
-            err(1, "No shell available");
-        if(system(command) == -1)
-            err(1, "The command to execute can not be executed");
-    }
+void command_exec(const char *command){
+    if(system(NULL) == 0)
+        err(1, "No shell available");
+    if(system(command) == -1)
+        err(1, "The command to execute can not be executed");
+}

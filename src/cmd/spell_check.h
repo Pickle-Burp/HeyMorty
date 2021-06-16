@@ -24,13 +24,21 @@ typedef struct hash_table{
 
 
 char **spell_check(char **text, int nb_word);
+
 int load(char *dict);
+
 hash_table *hash_create();
+
 int hash_insert(char *word);
+
 int hash_func(char *word);
+
 hash_node *create_hash_node(const char *word);
+
 int check(char *word, char **closest_word);
+
 char *correct(char *word, char **closest_word, int nb_word);
+
 int levenshtein(const char *s, int ls, const char *t, int lt);
 
 #endif

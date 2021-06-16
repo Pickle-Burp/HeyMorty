@@ -20,16 +20,15 @@ char **spell_check(char **text, int nb_word){
     // spell-check each word
     for(int i = 0; i < nb_word; i++){
         if(strcmp(text[i], "trouve") == 0 && i != nb_word - 1){
-            text[i+1] = text[i+1];
+            text[i + 1] = text[i + 1];
             nb_word--;
-        }
-        else if(strcmp(text[i], "recherche") == 0)
+        } else if(strcmp(text[i], "recherche") == 0)
             app_name = 0;
         else if(strcmp(text[i], "ouvre") == 0)
-            nb_word --;
+            nb_word--;
         int misspelled = check(text[i], closest_word);
         if((strcmp(text[i], "sur") == 0 || strcmp(text[i], "dans") == 0) && app_name != -1)
-            i ++;
+            i++;
         if(misspelled != 0)
             text[i] = correct(text[i], closest_word, misspelled);
     }
@@ -89,8 +88,7 @@ int hash_insert(char *word){
         // Create new node if list is empty
         hashTable->nodes[index] = create_hash_node(word);
         hashTable->nodes[index]->next = NULL;
-    }
-    else{
+    } else{
         while(curr != NULL){
             // If key is already in list, simply update the data of this list
             if(strcmp(curr->word, word) == 0)
@@ -137,7 +135,7 @@ int check(char *word, char **closest_word){
     while(curr != NULL){
         // add all closest word to a list
         closest_word[i] = curr->word;
-        i ++;
+        i++;
         if(strcmp(word, curr->word) == 0){
             return 0;
         }
@@ -153,7 +151,7 @@ char *correct(char *word, char **closest_word, int nb_word){
     char *res = word;
     for(int i = 1; i < nb_word; i++){
         // perform for each word levenshtein distance algorithm
-        new_dist = levenshtein(word, (int)strlen(word), closest_word[i], (int)strlen(closest_word[i]));
+        new_dist = levenshtein(word, (int) strlen(word), closest_word[i], (int) strlen(closest_word[i]));
         if(new_dist == 0)
             return word;
         // keep the low distanced word
