@@ -77,7 +77,7 @@ Ici vous trouverez toutes les actions que je peux realiser \n\n\n\
         * En utilisant votre navigateur par defaut : \n\
             Recherche [votre recherche] \n\
 * Trouver tout type de dossiers et fichiers presents sur l'ordinateur \n\
-    Demandez moi par exemple : \"trouve le dossier/fichier [dossier/fichier.extension]\"\n\</span>";
+    Demandez moi par exemple : \"trouve le dossier/fichier [dossier/fichier.extension]\"\n</span>";
 
     gtk_label_set_markup(GTK_LABEL(ui.pLabelHelp), ui.textHelp);
     gtk_label_set_justify(GTK_LABEL(ui.pLabel), GTK_JUSTIFY_CENTER);
