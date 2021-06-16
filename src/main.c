@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
   if (strcmp(argv[1], "cmd") == 0) {
     if(argc < 3)
       errx(EXIT_FAILURE, "No enough args. ./hey_morty cmd text");
-    char **text = argv+2;
+    char **text = argv+2; // TODO : change argv+2 to neural-network exit
     int n = 0;
     while (text[n] != NULL) {
       n++;
@@ -35,9 +35,5 @@ int main(int argc, char **argv) {
   if (strcmp(argv[1], "nn") == 0) {
       test_neural_network();
       return 0;
-  }
-  if (strcmp(argv[1], "nn") == 0) {
-    test_neural_network();
-    return 0;
   }
 }

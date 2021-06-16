@@ -31,6 +31,8 @@ const char *convert_to_command(char **text, int nb_word){
                            : l + 1)
                         : k + 1)
                      : j + 1));
+        if(strcmp(command, "google") == 0 || strcmp(command, "chrome") == 0)
+            command = "google-chrome-stable"; //google package name on nixos
     }
 
     /* to find a file or directory */
@@ -70,7 +72,10 @@ const char *convert_to_command(char **text, int nb_word){
         else{
             // browser specified after the search
             if(j == nb_word - 2 || k == nb_word - 2){
-                strcat(command, text[nb_word - 1]);
+                if(strcmp(text[nb_word - 1], "google") == 0 || strcmp(text[nb_word - 1], "chrome") == 0)
+                    strcat(command, "google-chrome-stable"); //google package name on nixos
+                else
+                    strcat(command, text[nb_word - 1]);
                 strcat(command, " \"google.com/search?q=");
                 for(int x = i + 1; x < nb_word - 2; x++){
                     strcat(command, text[x]);
@@ -79,9 +84,12 @@ const char *convert_to_command(char **text, int nb_word){
                 strcat(command, "\"");
             }
 
-                // browser specified before the searc
+                // browser specified before the search
             else{
-                strcat(command, text[i + 2]);
+                if(strcmp(text[i+2], "google") == 0 || strcmp(text[i+2], "chrome") == 0)
+                    strcat(command, "google-chrome-stable"); //google package name on nixos
+                else
+                    strcat(command, text[i + 2]);
                 strcat(command, " \"google.com/search?q=");
                 for(int x = 2 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
                     strcat(command, text[x]);
