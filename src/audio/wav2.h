@@ -21,5 +21,6 @@ typedef struct
 paTestData;
 
 int record();
+void raw_to_wav();
 
 #endif
