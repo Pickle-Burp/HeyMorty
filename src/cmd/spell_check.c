@@ -6,6 +6,7 @@ hash_table *hashTable;
 const int MAX_WORD_LEN = 45;
 // dictionary lines number
 const int NB_LINES = 32380;
+int app_name = -1;
 
 /* Check each word and correct it if necessary */
 char **spell_check(char **text, int nb_word){
@@ -14,17 +15,23 @@ char **spell_check(char **text, int nb_word){
 
     // try to load dictionary and abort if not loaded
     if(load(dict) != 0)
-        err(1, "Could not load dictionnary");
+        err(1, "Could not load dictionary");
 
     // spell-check each word
     for(int i = 0; i < nb_word; i++){
-        int misspelled = check(text[i], closest_word);
-        if(misspelled != 0){
-            // TODO : better correction
-            //printf("misspelled: %s\n", text[i]);
-            text[i] = correct(text[i], closest_word, misspelled);
-            //printf("corrected: %s\n", text[i]);
+        if(strcmp(text[i], "trouve") == 0 && i != nb_word - 1){
+            text[i+1] = text[i+1];
+            nb_word--;
         }
+        else if(strcmp(text[i], "recherche") == 0)
+            app_name = 0;
+        else if(strcmp(text[i], "ouvre") == 0)
+            nb_word --;
+        int misspelled = check(text[i], closest_word);
+        if((strcmp(text[i], "sur") == 0 || strcmp(text[i], "dans") == 0) && app_name != -1)
+            i ++;
+        if(misspelled != 0)
+            text[i] = correct(text[i], closest_word, misspelled);
     }
     return text;
 }
@@ -141,9 +148,9 @@ int check(char *word, char **closest_word){
 
 /* Correct a word using levenshtein distance */
 char *correct(char *word, char **closest_word, int nb_word){
-    int dist = levenshtein(word, (int)strlen(word), closest_word[0], (int)strlen(closest_word[0]));
+    int dist = 4; // maximum distance to the word
     int new_dist;
-    char *res = closest_word[0];
+    char *res = word;
     for(int i = 1; i < nb_word; i++){
         // perform for each word levenshtein distance algorithm
         new_dist = levenshtein(word, (int)strlen(word), closest_word[i], (int)strlen(closest_word[i]));
