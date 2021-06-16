@@ -9,7 +9,7 @@ static ring_buffer_size_t rbs_min(ring_buffer_size_t a, ring_buffer_size_t b)
 #define FILE_NAME       "audio_data.raw"
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (2)
+#define NUM_SECONDS     (3)
 #define NUM_CHANNELS    (1) //origin 2
 #define NUM_WRITES_PER_BUFFER   (4)
 /* #define DITHER_FLAG     (paDitherOff) */
@@ -39,6 +39,14 @@ typedef unsigned char SAMPLE;
 #define PRINTF_S_FORMAT "%d"
 #endif
 
+
+/**
+ * 
+ * create a copy of audio_data.raw with the wav header
+ * new file named "audio_data.wav"
+ * @author matthieu
+ * 
+ */
 void raw_to_wav()
 {
     char *file = "audio_data.wav";
@@ -125,7 +133,16 @@ static int threadFunctionWriteToRawFile(void* ptr)
 
 typedef int (*ThreadFunctionType)(void*);
 
-/* Start up a new thread in the given function, at the moment only Windows, but needs to be changed to use posix threads */
+/**
+ * 
+ * create a thread to be used whit the fn function
+ * the windows part was done by PA, linux side by myself
+ * @authors PA,matthieu
+ * @param pData pointer to the portaudio data struct
+ * @param fn fonction that will be used as the start routine
+ * for the thread
+ * 
+ */
 static PaError startThread( paTestData* pData, ThreadFunctionType fn )
 {
 #ifdef _WIN32
@@ -157,6 +174,14 @@ static PaError startThread( paTestData* pData, ThreadFunctionType fn )
     return paNoError;
 }
 
+/**
+ * 
+ * wait for the end of a given thread
+ * the windows part was done by PA, linux side by myself
+ * @authors PA,matthieu
+ * @param pData pointer to the portaudio data struct
+ * 
+ */
 static int stopThread( paTestData* pData )
 {
     pData->threadSyncFlag = 1;
@@ -213,6 +238,15 @@ static unsigned NextPowerOf2(unsigned val)
 }
 
 /*******************************************************************/
+
+
+/**
+ * 
+ * launch the recording for a given amount of seconds
+ * file will be saved as FILE_NAME 
+ * @authors PA,matthieu
+ * 
+ */
 int record()
 {
     PaStreamParameters  inputParameters,
