@@ -4,8 +4,8 @@ SOURCE	= $(shell find $(SOURCEDIR) -regex ' .*\.\(c\)$')
 HEADER	= $(shell find $(SOURCEDIR) -regex ' .*\.\(h\)$')
 OUT		= hey_morty
 CC		= gcc
-FLAGS	= -g -c -Wall `pkg-config --cflags gtk+-3.0`
-LFLAGS	= -lm -lcurl -ltensorflow `pkg-config --libs gtk+-3.0`
+FLAGS	= -g -c -Wall -Wextra `pkg-config --cflags glib-2.0` `pkg-config --cflags gtk+-3.0`
+LFLAGS	= -lm -lcurl -ltensorflow `pkg-config --libs glib-2.0` `pkg-config --libs gtk+-3.0`
 
 all: $(OBJS)
 	$(CC) -g $(OBJS) -o $(OUT) $(LFLAGS)
