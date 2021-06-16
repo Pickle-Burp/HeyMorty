@@ -44,6 +44,8 @@ add_executable(HeyMorty
         src/utils/file.c
         src/utils/string_builder.h
         src/utils/string_builder.c
+        src/ui/ui.h
+        src/ui/ui.c
         src/neural_network/cnn.c
         src/neural_network/cnn.h)
 
