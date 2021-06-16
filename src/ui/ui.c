@@ -66,9 +66,11 @@ void aled(void){
     // Set text
     ui.pLabelHelp = gtk_label_new(NULL);
     ui.textHelp = "<span>Bienvenue dans le menu d'aide.\n\
-Ici vous trouverez toutes les actions que je peux realiser \n\n\n\
+Ici vous trouverez toutes les actions que je peux realiser \n\
+Les étapes entre crochets sont à remplacer par ce qui est indiqué a l'intérieur. \n\
+Les étapes entre parenthèses sont facultatives. \n\n\n\
 * Ouvrir tout type d'application presente sur l'ordinateur \n\
-    Demandez moi par exemple : \"ouvre l'application firefox\"\n\
+    Demandez le moi sous la forme : Ouvre (l'application) [nom de l'application]\n\
 * Realiser une recherche sur internet \n\
     Vous pouvez me demander cela de 2 manieres : \n\
         * En precisant le navigateur : \n\
@@ -76,8 +78,10 @@ Ici vous trouverez toutes les actions que je peux realiser \n\n\n\
             Recherche [votre recherche] sur/dans [navigateur] \n\
         * En utilisant votre navigateur par defaut : \n\
             Recherche [votre recherche] \n\
-* Trouver tout type de dossiers et fichiers presents sur l'ordinateur \n\
-    Demandez moi par exemple : \"trouve le dossier/fichier [dossier/fichier.extension]\"\n</span>";
+* Trouver tout type de dossiers presents sur l'ordinateur \n\
+    Demandez le moi sous la forme : Trouve le dossier [nom du dossier] \n\
+* Trouver tout type de fichiers presents sur l'ordinateur \n\
+    Demandez le moi sous la forme : Trouve le fichier [nom du fichier.extension]</span>";
 
     gtk_label_set_markup(GTK_LABEL(ui.pLabelHelp), ui.textHelp);
     gtk_label_set_justify(GTK_LABEL(ui.pLabel), GTK_JUSTIFY_CENTER);
@@ -94,6 +98,7 @@ Ici vous trouverez toutes les actions que je peux realiser \n\n\n\
 
     g_signal_connect(ui.Return_button, "clicked", G_CALLBACK(homepage), NULL);
 }
+
 
 int ui_start(int argc, char **argv){
     // Initialise GTK
