@@ -1,3 +1,8 @@
+/**
+ * Author : Lise Giraud
+ * Date : 16/06/2021
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -234,15 +239,15 @@ void backProp(NeuralNet* nn, NNWeightsBiases* wb, Tensor* yTrue) {
 
         Tensor* w = dupeTensor(nn->weights[l + 1]);
         Tensor* wt = transpose(w);
-        Tensor* a = dupeTensor(nn->layers[l]);
-        Tensor* at = transpose(a);
+        Tensor* a1 = dupeTensor(nn->layers[l]);
+        Tensor* at1 = transpose(a1);
 
         matmul(wt, bDeltas[l + 1], bDeltas[l]);
         mult(bDeltas[l], z, bDeltas[l]);
 
-        matmul(bDeltas[l], at, wDeltas[l]);
+        matmul(bDeltas[l], at1, wDeltas[l]);
 
-        freeTensor(z); freeTensor(w); freeTensor(wt); freeTensor(a); freeTensor(at);
+        freeTensor(z); freeTensor(w); freeTensor(wt); freeTensor(a1); freeTensor(at1);
     }
 }
 

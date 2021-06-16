@@ -1,3 +1,8 @@
+/**
+ * Author : Lise Giraud
+ * Date : 16/06/2021
+ */
+
 #include <math.h>
 
 float fnSigmoid(float x) {

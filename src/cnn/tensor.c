@@ -1,3 +1,8 @@
+/**
+ * Author : Lise Giraud
+ * Date : 16/06/2021
+ */
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>

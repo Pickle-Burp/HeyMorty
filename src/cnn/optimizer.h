@@ -1,3 +1,8 @@
+/**
+ * Author : Lise Giraud
+ * Date : 16/06/2021
+ */
+
 #ifndef PROJECT_OPTIMIZER_H
 #define PROJECT_OPTIMIZER_H
 

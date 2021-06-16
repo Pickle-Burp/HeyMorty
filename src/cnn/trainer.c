@@ -1,3 +1,8 @@
+/**
+ * Author : Lise Giraud
+ * Date : 16/06/2021
+ */
+
 #include "trainer.h"
 
 TrainingInfo postEpochBenchmarks(NeuralNet* nn, Dataset dataset, size_t epochIndex) {
