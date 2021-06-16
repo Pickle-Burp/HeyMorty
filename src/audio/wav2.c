@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "portaudio-master\include\portaudio.h"
-#include "portaudio-master\src\common\pa_ringbuffer.h"
-#include "portaudio-master\src\common\pa_util.h"
+#include "wav2.h"
  
 static ring_buffer_size_t rbs_min(ring_buffer_size_t a, ring_buffer_size_t b)
 {
@@ -13,8 +9,8 @@ static ring_buffer_size_t rbs_min(ring_buffer_size_t a, ring_buffer_size_t b)
 #define FILE_NAME       "audio_data.raw"
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (10)
-#define NUM_CHANNELS    (2)
+#define NUM_SECONDS     (5)
+#define NUM_CHANNELS    (1) //origin 2
 #define NUM_WRITES_PER_BUFFER   (4)
 /* #define DITHER_FLAG     (paDitherOff) */
 #define DITHER_FLAG     (0) 
@@ -42,17 +38,6 @@ typedef unsigned char SAMPLE;
 #define SAMPLE_SILENCE  (128)
 #define PRINTF_S_FORMAT "%d"
 #endif
-
-typedef struct
-{
-    unsigned            frameIndex;
-    int                 threadSyncFlag;
-    SAMPLE             *ringBufferData;
-    PaUtilRingBuffer    ringBuffer;
-     FILE               *file;
-     void               *threadHandle;
-}
-paTestData;
 
 /* This routine is run in a separate thread to write data from the ring buffer into a file (during Recording) */
 static int threadFunctionWriteToRawFile(void* ptr)
@@ -98,52 +83,6 @@ static int threadFunctionWriteToRawFile(void* ptr)
     return 0;
 }
 
-/* This routine is run in a separate thread to read data from file into the ring buffer (during Playback). When the file
-   has reached EOF, a flag is set so that the play PA callback can return paComplete */
-static int threadFunctionReadFromRawFile(void* ptr)
-{
-    paTestData* pData = (paTestData*)ptr;
-
-    while (1)
-    {
-        ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pData->ringBuffer);
-
-        if (elementsInBuffer >= pData->ringBuffer.bufferSize / NUM_WRITES_PER_BUFFER)
-        {
-            void* ptr[2] = {0};
-            ring_buffer_size_t sizes[2] = {0};
-
-            /* By using PaUtil_GetRingBufferWriteRegions, we can write directly into the ring buffer */
-            PaUtil_GetRingBufferWriteRegions(&pData->ringBuffer, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
-
-            if (!feof(pData->file))
-            {
-                ring_buffer_size_t itemsReadFromFile = 0;
-                int i;
-                for (i = 0; i < 2 && ptr[i] != NULL; ++i)
-                {
-                    itemsReadFromFile += (ring_buffer_size_t)fread(ptr[i], pData->ringBuffer.elementSizeBytes, sizes[i], pData->file);
-                }
-                PaUtil_AdvanceRingBufferWriteIndex(&pData->ringBuffer, itemsReadFromFile);
-
-                /* Mark thread started here, that way we "prime" the ring buffer before playback */
-                pData->threadSyncFlag = 0;
-            }
-            else
-            {
-                /* No more data to read */
-                pData->threadSyncFlag = 1;
-                break;
-            }
-        }
-
-        /* Sleep a little while... */
-        Pa_Sleep(20);
-    }
-
-    return 0;
-}
-
 typedef int (*ThreadFunctionType)(void*);
 
 /* Start up a new thread in the given function, at the moment only Windows, but needs to be changed to use posix threads */
@@ -160,7 +99,14 @@ static PaError startThread( paTestData* pData, ThreadFunctionType fn )
     /* Start it up */
     pData->threadSyncFlag = 1;
     ResumeThread(pData->threadHandle);
-
+#elif __linux__
+    int e;
+    e = pthread_create(pData->threadHandle,NULL,fn,(void)pData);
+    if(e!=0)
+    {
+        errx(EXIT_FAILURE,"error while creating pthread.");
+    }
+    pData->threadSyncFlag = 1;
 #endif
 
     /* Wait for thread to startup */
@@ -180,6 +126,9 @@ static int stopThread( paTestData* pData )
     }
 #ifdef _WIN32
     CloseHandle(pData->threadHandle);
+    pData->threadHandle = 0;
+#elif __linux__
+    pthread_join(pData->threadHandle);
     pData->threadHandle = 0;
 #endif
 
@@ -212,31 +161,6 @@ static int recordCallback( const void *inputBuffer, void *outputBuffer,
     return paContinue;
 }
 
-/* This routine will be called by the PortAudio engine when audio is needed.
-** It may be called at interrupt level on some machines so don't do anything
-** that could mess up the system like calling malloc() or free().
-*/
-static int playCallback( const void *inputBuffer, void *outputBuffer,
-                         unsigned long framesPerBuffer,
-                         const PaStreamCallbackTimeInfo* timeInfo,
-                         PaStreamCallbackFlags statusFlags,
-                         void *userData )
-{
-    paTestData *data = (paTestData*)userData;
-    ring_buffer_size_t elementsToPlay = PaUtil_GetRingBufferReadAvailable(&data->ringBuffer);
-    ring_buffer_size_t elementsToRead = rbs_min(elementsToPlay, (ring_buffer_size_t)(framesPerBuffer * NUM_CHANNELS));
-    SAMPLE* wptr = (SAMPLE*)outputBuffer;
-
-    (void) inputBuffer; /* Prevent unused variable warnings. */
-    (void) timeInfo;
-    (void) statusFlags;
-    (void) userData;
-
-    data->frameIndex += PaUtil_ReadRingBuffer(&data->ringBuffer, wptr, elementsToRead);
-
-    return data->threadSyncFlag ? paComplete : paContinue;
-}
-
 static unsigned NextPowerOf2(unsigned val)
 {
     val--;
@@ -249,13 +173,14 @@ static unsigned NextPowerOf2(unsigned val)
 }
 
 /*******************************************************************/
-int main(void)
+int record()
 {
     PaStreamParameters  inputParameters,
                         outputParameters;
     PaStream*           stream;
     PaError             err = paNoError;
-    paTestData          data = {0};
+    paTestData          data = malloc(sizeof(struct paTestData));
+    data.frameIndex = 0;
     unsigned            delayCntr;
     unsigned            numSamples;
     unsigned            numBytes;
@@ -295,10 +220,10 @@ int main(void)
     err = Pa_OpenStream(
               &stream,
               &inputParameters,
-              NULL,                  /* &outputParameters, */
+              NULL,                  
               SAMPLE_RATE,
               FRAMES_PER_BUFFER,
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+              paClipOff,     
               recordCallback,
               &data );
     if( err != paNoError ) goto done;
@@ -315,13 +240,12 @@ int main(void)
     if( err != paNoError ) goto done;
     printf("\n=== Now recording to '" FILE_NAME "' for %d seconds!! Please speak into the microphone. ===\n", NUM_SECONDS); fflush(stdout);
 
-    /* Note that the RECORDING part is limited with TIME, not size of the file and/or buffer, so you can
-       increase NUM_SECONDS until you run out of disk */
+    /* the RECORDING is limited with TIME, not size of the file and/or buffer, therefore
+       increasing NUM_SECONDS increases the recording capacity till disk space is limited */
     delayCntr = 0;
     while( delayCntr++ < NUM_SECONDS )
     {
-        printf("index = %d\n", data.frameIndex );
-        fflush(stdout);
+        printf("index = %d\n", data.frameIndex ); fflush(stdout);
         Pa_Sleep(1000);
     }
     if( err < 0 ) goto done;
@@ -348,5 +272,6 @@ int main(void)
         fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( err ) );
         err = 1;          /* Always return 0 or 1, but no other return codes. */
     }
+    free(data);
     return err;
 }
