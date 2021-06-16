@@ -1,12 +1,10 @@
 #include <err.h>
 #include <json-c/json.h>
-#include <glib.h>
 #include "cmd/execution.h"
 #include "cmd/spell_check.h"
 #include "neural_network/nn.h"
 #include "sprec/sprec.h"
 #include "ui/ui.h"
-#include "utils/string_builder.h"
 
 #define API_KEY      "API_KEY"
 #define LANG         "fr-FR"
@@ -31,9 +29,9 @@ int main(int argc, char **argv) {
     struct json_object *conf = json_object_object_get(alt, "confidence");
     struct json_object *trans = json_object_object_get(alt, "transcript");
     double confidence = json_object_get_double(conf);
-    char *str = json_object_get_string(trans);
+    const char *str = json_object_get_string(trans);
     printf("%s\n", json_object_to_json_string(alt));
-    printf("%f : %s", str, confidence);
+    printf("%f : %s", confidence, str);
     json_object_put(parsed_json);
 
     return 0;

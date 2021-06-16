@@ -17,11 +17,11 @@ sprec_send_audio_data(
     const void *data,
     size_t length,
     const char *lang,
-    unsigned long sampleRate
+    unsigned long sampleRate __attribute__((unused))
 ) {
   CURL *curl;
   sprec_server_response *resp;
-  struct curl_httppost *form = NULL, *lastptr = NULL;
+  struct curl_httppost *form = NULL;
 
   resp = malloc(sizeof *resp);
   if (resp == NULL) {
