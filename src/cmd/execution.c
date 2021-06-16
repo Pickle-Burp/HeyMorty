@@ -1,6 +1,14 @@
 #include "execution.h"
 
-/* Check if a word is in a text */
+
+/**
+ * Check if a word is in a text
+ * @author CHEVREAU Annabelle
+ * @param text the string pronounced by the user
+ * @param search the word to search in text
+ * @param nb_word number of words of text
+ * @return the position of search in text if found, else nb_word
+ */
 int is_in(char **text, char *search, int nb_word){
     int i = 0;
     while(i < nb_word){
@@ -11,7 +19,13 @@ int is_in(char **text, char *search, int nb_word){
     return i;
 }
 
-/* Convert a text into a linux command */
+/**
+ * Convert a text into a linux command
+ * @author CHEVREAU Annabelle
+ * @param text the string to convert
+ * @param nb_word number of words of text
+ * @return a linux command
+ */
 const char *convert_to_command(char **text, int nb_word){
     char *command = calloc(512, sizeof(char));
     int i = 0, j = 0, k = 0, l = 0;
@@ -38,7 +52,8 @@ const char *convert_to_command(char **text, int nb_word){
         /* to find a file or directory */
     else if(is_in(text, "trouve", nb_word) != nb_word){
         if(nb_word == 1)
-            err(1, "You must enter the file or directory to find");
+            err(1, "You must enter the file "
+                   "or directory to find");
         strcat(command, "find ~/ $PWD -type ");
         if((j = is_in(text, "fichier", nb_word)) != nb_word){
             strcat(command, "f -name \"");
@@ -71,8 +86,11 @@ const char *convert_to_command(char **text, int nb_word){
         else{
             // browser specified after the search
             if(j == nb_word - 2 || k == nb_word - 2){
-                if(strcmp(text[nb_word - 1], "google") == 0 || strcmp(text[nb_word - 1], "chrome") == 0)
-                    strcat(command, "google-chrome-stable"); //google package name on nixos
+                if(strcmp(text[nb_word - 1], "google") == 0 ||
+                    strcmp(text[nb_word - 1], "chrome") == 0)
+                    //google package name on nixos
+                    strcat(command, "google-chrome-stable");
+
                 else
                     strcat(command, text[nb_word - 1]);
                 strcat(command, " \"google.com/search?q=");
@@ -85,8 +103,10 @@ const char *convert_to_command(char **text, int nb_word){
 
                 // browser specified before the search
             else{
-                if(strcmp(text[i + 2], "google") == 0 || strcmp(text[i + 2], "chrome") == 0)
-                    strcat(command, "google-chrome-stable"); //google package name on nixos
+                if(strcmp(text[i + 2], "google") == 0 ||
+                    strcmp(text[i + 2], "chrome") == 0)
+                    //google package name on nixos
+                    strcat(command, "google-chrome-stable");
                 else
                     strcat(command, text[i + 2]);
                 strcat(command, " \"google.com/search?q=");
@@ -101,6 +121,11 @@ const char *convert_to_command(char **text, int nb_word){
     return command;
 }
 
+/**
+ * Executes a command on a terminal
+ * @author CHEVREAU Annabelle
+ * @param command the command to execute
+ */
 void command_exec(const char *command){
     if(system(NULL) == 0)
         err(1, "No shell available");

@@ -8,7 +8,13 @@ const int MAX_WORD_LEN = 45;
 const int NB_LINES = 32380;
 int app_name = -1;
 
-/* Check each word and correct it if necessary */
+/**
+ * Check each word and correct it if necessary
+ * @author CHEVREAU Annabelle
+ * @param text the text to correct
+ * @param nb_word number of words in the text
+ * @return pointer to the corrected text
+ */
 char **spell_check(char **text, int nb_word){
     char *dict = WORDS;
     char **closest_word = calloc(NB_LINES, sizeof(char));
@@ -27,7 +33,8 @@ char **spell_check(char **text, int nb_word){
         else if(strcmp(text[i], "ouvre") == 0)
             nb_word--;
         int misspelled = check(text[i], closest_word);
-        if((strcmp(text[i], "sur") == 0 || strcmp(text[i], "dans") == 0) && app_name != -1)
+        if((strcmp(text[i], "sur") == 0 || strcmp(text[i], "dans") == 0)
+            && app_name != -1)
             i++;
         if(misspelled != 0)
             text[i] = correct(text[i], closest_word, misspelled);
@@ -35,7 +42,12 @@ char **spell_check(char **text, int nb_word){
     return text;
 }
 
-/* Loads dict into memory */
+/**
+ * Loads dict into memory
+ * @author CHEVREAU Annabelle
+ * @param dict name of the dictionary file
+ * @return -1 if fail else 0
+ */
 int load(char *dict){
     char word[MAX_WORD_LEN + 1];
     hashTable = hash_create();
@@ -57,7 +69,11 @@ int load(char *dict){
     return 0;
 }
 
-/* Create Hash Table */
+/**
+ * Create Hash Table
+ * @author CHEVREAU Annabelle
+ * @return pointer to the hash table
+ */
 hash_table *hash_create(){
     // Allocate memory to the table
     hash_table *pTable = (hash_table *) malloc(sizeof(hash_table));
@@ -65,7 +81,8 @@ hash_table *hash_create(){
         err(1, "Not enough memory!\n");
 
     // Allocate memory for the actual nodes of the table
-    pTable->nodes = (hash_node **) malloc(sizeof(hash_node *) * HASH_TABLE_SIZE);
+    pTable->nodes = (hash_node **) malloc(sizeof(hash_node *)
+            * HASH_TABLE_SIZE);
     if(!pTable->nodes)
         err(1, "Not enough memory!\n");
 
@@ -76,7 +93,12 @@ hash_table *hash_create(){
     return pTable;
 }
 
-/* Inserts a new data entry to the table */
+/**
+ * Inserts a new data entry to the table
+ * @author CHEVREAU Annabelle
+ * @param word the word to insert in hash table
+ * @return -1 if fail else 0
+ */
 int hash_insert(char *word){
     // Perform hash funtion on a word and store integer in Index
     int index = hash_func(word);
@@ -106,7 +128,12 @@ int hash_insert(char *word){
     return 0;
 }
 
-/* Hash Function */
+/**
+ * DJB Hash Function
+ * @author CHEVREAU Annabelle
+ * @param word the word to find the hash value
+ * @return position in hash table of the word
+ */
 int hash_func(char *word){
     unsigned int hash = 5381;
     for(unsigned int i = 0; i < strlen(word); word++, i++)
@@ -114,7 +141,12 @@ int hash_func(char *word){
     return hash % HASH_TABLE_SIZE;
 }
 
-/* Create the Hash Node */
+/**
+ * Create the Hash Node
+ * @author CHEVREAU Annabelle
+ * @param word the word to copy in a new node
+ * @return pointer to the new node
+ */
 hash_node *create_hash_node(const char *word){
     hash_node *curr = (hash_node *) malloc(sizeof(hash_node));
     curr->word = (char *) malloc(sizeof(char) * (strlen(word) + 1));
@@ -122,7 +154,13 @@ hash_node *create_hash_node(const char *word){
     return curr;
 }
 
-/* Check if a word is in dictionary */
+/**
+ * Check if a word is in dictionary
+ * @author CHEVREAU Annabelle
+ * @param word the word which has to been verified
+ * @param closest_word a list of closest word to word
+ * @return
+ */
 int check(char *word, char **closest_word){
     int hash_tmp;
     hash_node *curr;
@@ -144,14 +182,22 @@ int check(char *word, char **closest_word){
     return i;
 }
 
-/* Correct a word using levenshtein distance */
+/**
+ * Correct a word using levenshtein distance
+ * @author CHEVREAU Annabelle
+ * @param word the word to correct
+ * @param closest_word the list of closest word to word
+ * @param nb_word the number of word in closest_word
+ * @return
+ */
 char *correct(char *word, char **closest_word, int nb_word){
     int dist = 4; // maximum distance to the word
     int new_dist;
     char *res = word;
     for(int i = 1; i < nb_word; i++){
         // perform for each word levenshtein distance algorithm
-        new_dist = levenshtein(word, (int) strlen(word), closest_word[i], (int) strlen(closest_word[i]));
+        new_dist = levenshtein(word, (int) strlen(word), closest_word[i],
+                               (int) strlen(closest_word[i]));
         if(new_dist == 0)
             return word;
         // keep the low distanced word
@@ -163,23 +209,33 @@ char *correct(char *word, char **closest_word, int nb_word){
     return res;
 }
 
-/* Calculate the levenshtein distance between two words */
+/**
+ * Calculate the levenshtein distance between two words
+ * @author CHEVREAU Annabelle
+ * @param s first word
+ * @param ls length of the first word
+ * @param t second word
+ * @param lt length of the second word
+ * @return the levenshtein distance between the two words
+ */
 int levenshtein(const char *s, int ls, const char *t, int lt){
     int a, b, c;
 
-    // if either string is empty, difference is inserting all chars from the other
+    // if either string is empty, difference = insert all chars from the other
     if(!ls)
         return lt;
     if(!lt)
         return ls;
 
-    // if last letters are the same, the difference is whatever is required to edit the rest of the strings
+    // if last letters are the same,
+    // the difference is whatever is required to edit the rest of the strings
     if(s[ls - 1] == t[lt - 1])
         return levenshtein(s, ls - 1, t, lt - 1);
 
     // try changing last letter of s to that of t;
     // or remove last letter of s;
-    // or remove last letter of t, any of which is 1 edit plus editing the rest of the strings
+    // or remove last letter of t,
+    // any of which is 1 edit plus editing the rest of the strings
     a = levenshtein(s, ls - 1, t, lt - 1);
     b = levenshtein(s, ls, t, lt - 1);
     c = levenshtein(s, ls - 1, t, lt);
