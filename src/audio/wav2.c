@@ -9,7 +9,7 @@ static ring_buffer_size_t rbs_min(ring_buffer_size_t a, ring_buffer_size_t b)
 #define FILE_NAME       "audio_data.raw"
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (5)
+#define NUM_SECONDS     (2)
 #define NUM_CHANNELS    (1) //origin 2
 #define NUM_WRITES_PER_BUFFER   (4)
 /* #define DITHER_FLAG     (paDitherOff) */
@@ -38,6 +38,46 @@ typedef unsigned char SAMPLE;
 #define SAMPLE_SILENCE  (128)
 #define PRINTF_S_FORMAT "%d"
 #endif
+
+void raw_to_wav()
+{
+    char *file = "audio_data.wav";
+    FILE *fp = fopen(file,"w");
+    fwrite("RIFF",sizeof(char),4,fp);
+    int file_size = SAMPLE_RATE * NUM_SECONDS + 36;
+    fwrite(&file_size,sizeof(int),1,fp);
+    fwrite("WAVE",sizeof(char),4,fp);
+    fwrite("fmt ",sizeof(char),4,fp);
+    int format = 16;
+    fwrite(&format,sizeof(int),1,fp);
+    short type = 1;
+    fwrite(&type,sizeof(short),1,fp);
+    short channels = 1;
+    fwrite(&channels,sizeof(short),1,fp);
+    int sample = 44100;
+    fwrite(&sample,sizeof(int),1,fp);
+    short bitpersample = 16;
+    int truc = sample*(int)bitpersample*channels/8;
+    fwrite(&truc,sizeof(int),1,fp);
+    short mono = (short)((int)bitpersample*channels/8);
+    fwrite(&mono,sizeof(short),1,fp);
+    fwrite(&bitpersample,sizeof(short),1,fp);
+    fwrite("data",sizeof(char),4,fp);
+    file_size = file_size - 36;
+    fwrite(&file_size,sizeof(int),4,fp);
+
+    FILE *fp2 = fopen(FILE_NAME,"r");
+    int e = 1;
+    char buffer[100];
+    while (e)
+    {
+        e = fread(buffer,sizeof(char),100,fp2);
+        fwrite(buffer,sizeof(char),e,fp);
+    }
+    fclose(fp2);
+    fclose(fp);
+}
+
 
 /* This routine is run in a separate thread to write data from the ring buffer into a file (during Recording) */
 static int threadFunctionWriteToRawFile(void* ptr)
