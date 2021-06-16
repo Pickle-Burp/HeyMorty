@@ -9,5 +9,7 @@ stdenv.mkDerivation {
       glib
       json_c
       gtk3
+      fftw
+      libpng
     ];
 }

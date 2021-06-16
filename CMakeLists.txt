@@ -11,6 +11,7 @@ find_library(curl curl)
 find_library(tensorflow libtensorflow-bin)
 find_library(json-c json-c)
 find_library(gtk3 gtk+-3.0)
+find_library(libpng libpng)
 pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -31,6 +32,11 @@ endif ()
 
 add_executable(HeyMorty
         src/main.c
+        src/main.h
+        src/audio/wav2.h
+        src/audio/wav2.c
+        src/audio/specto.h
+        src/audio/specto.c
         src/cmd/execution.h
         src/cmd/execution.c
         src/cmd/spell_check.h
@@ -72,5 +78,6 @@ target_link_libraries(HeyMorty Threads::Threads)
 target_link_libraries(HeyMorty m)
 target_link_libraries(HeyMorty tensorflow)
 target_link_libraries(HeyMorty json-c)
+target_link_libraries(HeyMorty libpng)
 target_link_libraries(HeyMorty PkgConfig::GLIB)
 target_link_libraries(HeyMorty ${GTK3_LIBRARIES})
