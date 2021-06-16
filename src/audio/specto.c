@@ -1,5 +1,14 @@
 #include "specto.h"
 
+/**
+ * 
+ * create a new struct list element that is allocated 
+ * and initialized to 0.
+ * @authors matthieu
+ * @param size the given size for the data array
+ * @return pointer to newly allocated
+ * and initialized list
+ */
 list *new_list(int size)
 {
     list *ext = (list*)malloc(sizeof(struct list*));
@@ -13,6 +22,15 @@ list *new_list(int size)
     return ext;
 }
 
+/**
+ * 
+ * create a dynamic list of array with lon number of list
+ * within it.
+ * @authors matthieu
+ * @param size the given size for the data array.
+ * @param lon lenght of the list.
+ * @return a dynamically allocated and initialized list.
+ */
 list *create_empty_list(int size,int lon)
 {
     if (lon ==0)
@@ -29,6 +47,15 @@ list *create_empty_list(int size,int lon)
     return ext;
 }
 
+/**
+ * 
+ * modify the data array at index of the list with data
+ * @authors matthieu
+ * @param l point to first element of list
+ * @param index index of an element in the list
+ * @param data double array to input at index in list
+ * @param size the given size for the data array
+ */
 void mod_list_data(list *l,int index,double *data,int size)
 {
     list *ext = l;
@@ -46,6 +73,16 @@ void mod_list_data(list *l,int index,double *data,int size)
     }
 }
 
+/**
+ * 
+ * apply a fourier's tranform  to l_in data
+ * and stores it in l_out
+ * @authors matthieu
+ * @param l_in list of windowed data as
+ * amplitude of a sound wave
+ * @param l_ou list of the resukting fourier's tranform
+
+ */
 void apply_fourier_to_list(list *l_in,list *l_out)
 {
     list *l1,*l2;
@@ -72,7 +109,13 @@ void apply_fourier_to_list(list *l_in,list *l_out)
     fftw_free(out);
 }
 
-
+/**
+ * 
+ * frees all allocated memory of a list and those 
+ * connected to it
+ * @authors matthieu
+ * @param l point to first element of list
+ */
 void free_list(list *l)
 {
     list *next;
@@ -200,6 +243,19 @@ static int pix (double value, int max)
     return ext;
 }
 
+
+/**
+ * 
+ * replace the value of the pixels at x,y within the sizex,sizey 
+ * rectangle by val
+ * @authors matthieu
+ * @param bitmap pointer to bitmap (spectogram)
+ * @param x coordonate along the x axis
+ * @param y coordonate along the y axis
+ * @param sizex size of the rectangle along the x axis
+ * @param sizey size of the rectangle along the y axis
+ * @param val int value to use as replacement
+ */
 void bitmap_chunk_color(bitmap_t *bitmap,int x,int y,int sizex,int sizey,int val)
 {
     pixel_t *pixel;
@@ -215,6 +271,14 @@ void bitmap_chunk_color(bitmap_t *bitmap,int x,int y,int sizex,int sizey,int val
     }
 }
 
+/**
+ * 
+ * create and fills bitmap to make it into spectogram
+ * @authors matthieu
+ * @param l_out point to list with the result of the
+ * fourier's transform
+ * @return pointer to allocated bitmap(spectogram)
+ */
 bitmap_t *list_to_bitmap(list *l_out)
 {
     bitmap_t *bitmap= (bitmap_t*)malloc(sizeof(bitmap_t*));
@@ -249,7 +313,14 @@ bitmap_t *list_to_bitmap(list *l_out)
 }
 
 
-
+/**
+ * 
+ * create spectograms in png format form given file
+ * one spectogram for each second of data(rounded to
+ *  the next second)
+ * @authors matthieu
+ * @param pathname string of the path to .raw file
+ */
 void spectogram(char *pathname)
 {
     FILE *fp = fopen(pathname,"r");
