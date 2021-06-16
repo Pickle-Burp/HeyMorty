@@ -5,9 +5,18 @@ set(CMAKE_C_STANDARD 99)
 
 find_library(curl curl)
 find_library(tensorflow libtensorflow-bin)
+find_library(gtk3 gtk+-3.0)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
+include_directories(${GTK3_INCLUDE_DIRS})
+
+link_directories(${GTK3_LIBRARY_DIRS})
+
+add_definitions(${GTK3_CFLAGS_OTHER})
 
 
 if (CMAKE_COMPILER_IS_GNUCC)
@@ -18,6 +27,8 @@ add_executable(HeyMorty
         src/main.c
         src/cmd/execution.h
         src/cmd/execution.c
+        src/cmd/spell_check.h
+        src/cmd/spell_check.c
         src/neural_network/layer.h
         src/neural_network/layer.c
         src/neural_network/neuron.h
@@ -33,6 +44,8 @@ add_executable(HeyMorty
         src/utils/file.c
         src/utils/string_builder.h
         src/utils/string_builder.c
+        src/ui/ui.h
+        src/ui/ui.c
         src/neural_network/cnn.c
         src/neural_network/cnn.h)
 
@@ -40,3 +53,4 @@ target_link_libraries(HeyMorty curl)
 target_link_libraries(HeyMorty Threads::Threads)
 target_link_libraries(HeyMorty m)
 target_link_libraries(HeyMorty tensorflow)
+target_link_libraries(HeyMorty ${GTK3_LIBRARIES})
