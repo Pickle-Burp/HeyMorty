@@ -11,3 +11,5 @@ How to use:
 - libcurl4-openssl-dev
 - libflac-dev
 - libasound-dev
+- libgtk-3-dev >= 3.2
+- libjson-c-dev >= 0.15

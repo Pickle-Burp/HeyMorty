@@ -3,9 +3,15 @@ project(HeyMorty C)
 
 set(CMAKE_C_STANDARD 99)
 
+FIND_PACKAGE(PkgConfig REQUIRED)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
 find_library(curl curl)
 find_library(tensorflow libtensorflow-bin)
+find_library(json-c json-c)
 find_library(gtk3 gtk+-3.0)
+pkg_check_modules(GLIB REQUIRED IMPORTED_TARGET glib-2.0)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -53,4 +59,6 @@ target_link_libraries(HeyMorty curl)
 target_link_libraries(HeyMorty Threads::Threads)
 target_link_libraries(HeyMorty m)
 target_link_libraries(HeyMorty tensorflow)
+target_link_libraries(HeyMorty json-c)
+target_link_libraries(HeyMorty PkgConfig::GLIB)
 target_link_libraries(HeyMorty ${GTK3_LIBRARIES})

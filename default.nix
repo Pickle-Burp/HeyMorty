@@ -6,6 +6,8 @@ stdenv.mkDerivation {
       pkg-config
       curl
       libtensorflow-bin
+      glib
+      json_c
       gtk3
     ];
 }
