@@ -49,21 +49,21 @@ void mod_list_data(list *l,int index,double *data,int size)
 void apply_fourier_to_list(list *l_in,list *l_out)
 {
     list *l1,*l2;
-    int N = 160;
+    int N = 320;
     double *in = fftw_alloc_real(N);
     double *out = fftw_alloc_real(N);
     l1 = l_in;
     l2= l_out;
     
     fftw_plan my_plan;
-    my_plan =fftw_plan_r2r_1d(160,in,out,FFTW_DHT,FFTW_PATIENT);
+    my_plan =fftw_plan_r2r_1d(320,in,out,FFTW_DHT,FFTW_PATIENT);
     while (l1!=NULL)
     {
-        memcpy(in,l1->data,160);
+        memcpy(in,l1->data,320);
         /**
         fftw_execute(my_plan);
          **/
-        memcpy(l2->data,out,160);
+        memcpy(l2->data,out,320);
         l1 = l1->next;
         l2 = l2->next;
     }
@@ -200,6 +200,21 @@ static int pix (double value, int max)
     return ext;
 }
 
+void bitmap_chunk_color(bitmap_t *bitmap,int x,int y,int sizex,int sizey,int val)
+{
+    pixel_t *pixel;
+    for(int xe=0;xe<sizex;xe++)
+    {
+        for(int ye=0;ye<sizey;ye++)
+        {
+            pixel = pixel_at(bitmap,x+xe,y+ye);
+            pixel->blue = val;
+            pixel->green = val;
+            pixel->red = val;
+        }
+    }
+}
+
 bitmap_t *list_to_bitmap(list *l_out)
 {
     bitmap_t *bitmap= (bitmap_t*)malloc(sizeof(bitmap_t*));
@@ -224,22 +239,12 @@ bitmap_t *list_to_bitmap(list *l_out)
         for(int y=0;y<l->size;y++)
         {
             val = pix(l->data[y],200);
-            pixel = pixel_at(bitmap,x*3,l->size-y-1);
-            pixel->blue = val;
-            pixel->green = val;
-            pixel->red = val;
-            pixel = pixel_at(bitmap,x*3+1,l->size-y-1);
-            pixel->blue = val;
-            pixel->green = val;
-            pixel->red = val;
-            pixel = pixel_at(bitmap,x*3+2,l->size-y-1);
-            pixel->blue = val;
-            pixel->green = val;
-            pixel->red = val;
+            bitmap_chunk_color(bitmap,x*6,bitmap->height-y-1,6,1,val);
         }
         x+=1;
         l=l->next;
     }
+    bitmap_chunk_color(bitmap,0,139,bitmap->width,1,255);
     return bitmap;
 }
 
@@ -252,30 +257,30 @@ void spectogram(char *pathname)
     {
         errx(EXIT_FAILURE,"couldn't read from file");
     }
-    float receiver[160];
-    double darray[160];
-    for(int y =0;y<160;y++)
+    float receiver[320];
+    double darray[320];
+    for(int y =0;y<320;y++)
     {
         darray[y]=0;
     }
 
     list *l_in,*l_out;
-    size_t ret = fread(receiver,sizeof(*receiver),160,fp);
+    size_t ret = fread(receiver,sizeof(*receiver),320,fp);
     int i =0;
     char *dest = "spectogram .png";
     char num = '1';
     while (ret)
     {
-        l_in = create_empty_list(160,100);
-        l_out = create_empty_list(160,100);
-        while ((i<100) && (ret))
+        l_in = create_empty_list(320,50);
+        l_out = create_empty_list(320,50);
+        while ((i<50) && (ret))
         {
             for(int x=0;x<ret;x++)
             {
                 darray[x]=(double)receiver[x];
             }
             mod_list_data(l_in,i,darray,(size_t)ret);
-            ret = fread(receiver,sizeof(*receiver),160,fp);
+            ret = fread(receiver,sizeof(*receiver),320,fp);
             i+=1;
         }
         apply_fourier_to_list(l_in,l_out);
@@ -293,9 +298,9 @@ void spectogram(char *pathname)
 
         free_list(l_in);
         free_list(l_out);
-        if(ret==160)
+        if(ret==320)
         {
-            ret = fread(receiver,sizeof(*receiver),160,fp);
+            ret = fread(receiver,sizeof(*receiver),320,fp);
             num+=1;
         }
     }
