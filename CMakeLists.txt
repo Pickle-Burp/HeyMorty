@@ -35,12 +35,6 @@ add_executable(HeyMorty
         src/cmd/execution.c
         src/cmd/spell_check.h
         src/cmd/spell_check.c
-        src/neural_network/layer.h
-        src/neural_network/layer.c
-        src/neural_network/neuron.h
-        src/neural_network/neuron.c
-        src/neural_network/nn.h
-        src/neural_network/nn.c
         src/sprec/sprec.h
         src/sprec/recognize.h
         src/sprec/recognize.c
@@ -52,8 +46,26 @@ add_executable(HeyMorty
         src/utils/string_builder.c
         src/ui/ui.h
         src/ui/ui.c
-        src/neural_network/cnn.c
-        src/neural_network/cnn.h)
+        src/cnn/training.h
+        src/cnn/dataset.c
+        src/cnn/dataset.h
+        src/cnn/functions.c
+        src/cnn/functions.h
+        src/cnn/loss_functions.c
+        src/cnn/loss_functions.h
+        src/cnn/data.c
+        src/cnn/data.h
+        src/cnn/training.c
+        src/cnn/neuralnet.c
+        src/cnn/neuralnet.h
+        src/cnn/optimizer.c
+        src/cnn/optimizer.h
+        src/cnn/tensor.c
+        src/cnn/tensor.h
+        src/cnn/trainer.c
+        src/cnn/trainer.h
+        src/cnn/dataset.c src/cnn/dataset.h
+        )
 
 target_link_libraries(HeyMorty curl)
 target_link_libraries(HeyMorty Threads::Threads)
