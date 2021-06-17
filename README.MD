@@ -1,6 +1,14 @@
 # HeyMorty !
 
-How to use:
+## How to install
+
+```sh
+sudo apt-get update -y -qq
+sudo apt install cmake libcurl4-openssl-dev libflac-dev libasound-dev libgtk-3-dev libjson-c-dev libpng-dev libfftw3-dev
+make
+```
+
+## How to use:
 
 ```sh
 ./hey_morty <audio/cmd/ui/wk>
@@ -10,7 +18,7 @@ How to use:
 ./hey_morty wk <audio_file> # Perform the audio recognition and execute the command in the audio
 ```
 
-## Example :
+### Example :
 Create a audio file containing your sentence in single channel, 16kHz.
 Possible actions : 
 > \<\> : Must be filled  
