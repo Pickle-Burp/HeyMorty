@@ -1,57 +1,134 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <err.h>
-#include <string.h>
+#include "execution.h"
 
-#define OPEN "open"
-#define SHOW "show"
-#define SEARCH "search"
 
-char **cut_text(char **text, int nb_word) {
-  char **cutting_command;
-  if (text[0] == "lance" || text[0] == "ouvre") {
-    cutting_command[0] = OPEN;
-    cutting_command[1] = text[1];
-  }
-  if (text[0] == "montre-moi") {
-    cutting_command[0] = SHOW;
-    cutting_command[1] = text[nb_word - 2];
-    cutting_command[2] = text[nb_word - 1];
-  }
-  if (text[0] == "cherche") {
-    cutting_command[0] = SEARCH;
-    cutting_command[1] = text[nb_word - 1];
-    for (int i = 1; i < nb_word - 2; i++)
-      strcat(cutting_command[2], text[i]);
-  }
-  return cutting_command;
-}
-
-const char *convert_to_command(char **tab_command) {
-  char *command = "";
-  if (tab_command[0] == OPEN)
-    command = tab_command[1];
-  else if (tab_command[0] == SEARCH) {
-    strcat(command, tab_command[1]);
-    strcat(command, " ");
-    strcat(command, "\"");
-    strcat(command, tab_command[2]);
-    strcat(command, "\"");
-  } else if (tab_command[0] == SHOW) {
-    if (tab_command[1] == "dossier") {
-      strcat(command, "ls ");
-      strcat(command, tab_command[2]);
-    } else {
-      strcat(command, "cat");
-      strcat(command, tab_command[2]);
+/**
+ * Check if a word is in a text
+ * @author CHEVREAU Annabelle
+ * @param text the string pronounced by the user
+ * @param search the word to search in text
+ * @param nb_word number of words of text
+ * @return the position of search in text if found, else nb_word
+ */
+int is_in(char **text, char *search, int nb_word){
+    int i = 0;
+    while(i < nb_word){
+        if(strcmp(text[i], search) == 0)
+            return i;
+        i++;
     }
-  }
-  return command;
+    return i;
 }
 
-void command_exec(const char *command) {
-  if (system(NULL) == 0)
-    printf("No shell available");
-  if (system(command) == -1)
-    printf("The command to execute can not be executed");
+/**
+ * Convert a text into a linux command
+ * @author CHEVREAU Annabelle
+ * @param text the string to convert
+ * @param nb_word number of words of text
+ * @return a linux command
+ */
+const char *convert_to_command(char **text, int nb_word){
+    char *command = calloc(512, sizeof(char));
+    int i = 0, j = 0, k = 0, l = 0;
+
+    /* to open an application */
+    if((i = is_in(text, "ouvre", nb_word)) != nb_word){
+        if(nb_word == 1)
+            err(1, "You must enter the application to open");
+        j = is_in(text, "application", nb_word);
+        k = is_in(text, "l'application", nb_word);
+        l = is_in(text, "lapplication", nb_word);
+        command = *(text +
+                    (j == nb_word
+                     ? (k == nb_word
+                        ? (l == nb_word
+                           ? i + 1
+                           : l + 1)
+                        : k + 1)
+                     : j + 1));
+        if(strcmp(command, "google") == 0 || strcmp(command, "chrome") == 0)
+            command = "google-chrome-stable"; //google package name on nixos
+    }
+
+        /* to find a file or directory */
+    else if(is_in(text, "trouve", nb_word) != nb_word){
+        if(nb_word == 1)
+            err(1, "You must enter the file "
+                   "or directory to find");
+        strcat(command, "find ~/ $PWD -type ");
+        if((j = is_in(text, "fichier", nb_word)) != nb_word){
+            strcat(command, "f -name \"");
+            strcat(command, *(text + j + 1));
+        } else if((k = is_in(text, "dossier", nb_word)) != nb_word){
+            strcat(command, "d -name \"");
+            strcat(command, *(text + k + 1));
+        }
+        strcat(command, "\" ");
+        strcat(command, "-exec thunar ");
+        strcat(command, "{} \\;");
+    }
+        /* to make a research */
+    else if((i = is_in(text, "recherche", nb_word)) != nb_word){
+        if(nb_word == 1)
+            err(1, "You must enter a search");
+
+        // if no browser specified, default browser
+        if((j = is_in(text, "sur", nb_word)) == nb_word &&
+           (k = is_in(text, "dans", nb_word)) == nb_word){
+            strcat(command, "xdg-open \"https://www.google.com/search?q=");
+            for(int x = i + 1; x < nb_word; x++){
+                strcat(command, text[x]);
+                strcat(command, " ");
+            }
+            strcat(command, "\"");
+        }
+
+            // Browser specified
+        else{
+            // browser specified after the search
+            if(j == nb_word - 2 || k == nb_word - 2){
+                if(strcmp(text[nb_word - 1], "google") == 0 ||
+                    strcmp(text[nb_word - 1], "chrome") == 0)
+                    //google package name on nixos
+                    strcat(command, "google-chrome-stable");
+
+                else
+                    strcat(command, text[nb_word - 1]);
+                strcat(command, " \"google.com/search?q=");
+                for(int x = i + 1; x < nb_word - 2; x++){
+                    strcat(command, text[x]);
+                    strcat(command, " ");
+                }
+                strcat(command, "\"");
+            }
+
+                // browser specified before the search
+            else{
+                if(strcmp(text[i + 2], "google") == 0 ||
+                    strcmp(text[i + 2], "chrome") == 0)
+                    //google package name on nixos
+                    strcat(command, "google-chrome-stable");
+                else
+                    strcat(command, text[i + 2]);
+                strcat(command, " \"google.com/search?q=");
+                for(int x = 2 + (j == nb_word - 1 ? k : j); x < nb_word; x++){
+                    strcat(command, text[x]);
+                    strcat(command, " ");
+                }
+                strcat(command, "\"");
+            }
+        }
+    }
+    return command;
+}
+
+/**
+ * Executes a command on a terminal
+ * @author CHEVREAU Annabelle
+ * @param command the command to execute
+ */
+void command_exec(const char *command){
+    if(system(NULL) == 0)
+        err(1, "No shell available");
+    if(system(command) == -1)
+        err(1, "The command to execute can not be executed");
 }
