@@ -5,7 +5,6 @@
 #include "cmd/spell_check.h"
 #include "sprec/sprec.h"
 #include "ui/ui.h"
-#include "audio/wav2.h"
 #include "cnn/training.h"
 
 #define API_KEY      "API_KEY"
@@ -14,8 +13,8 @@
 void workflow(char *filname);
 
 void full() {
-  record();
-  raw_to_wav();
+  //record();
+  //raw_to_wav();
   workflow("audio_data.wav");
 }
 
